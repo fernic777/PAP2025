@@ -1,21 +1,20 @@
 package pap2025.logica;
 
-import pap2025.datatypes.DTDimenciones;
+import pap2025.datatypes.DTDimensiones;
 import pap2025.datatypes.DTFecha;
 
 /**
- * Clase ArtEspeciales que hereda de DonacionMaterial
+ * Clase ArtEspeciales que hereda de Material
  */
-public class ArtEspeciales extends DonacionMaterial {
+public class ArtEspeciales extends Material {
     private String descripcion;
     private double peso;
-    private DTDimenciones dimenciones;
+    private DTDimensiones dimensiones;
     
-    public ArtEspeciales(int id, DTFecha fechaIngreso, String descripcion, double peso, DTDimenciones dimenciones) {
-        super(id, fechaIngreso);
+    public ArtEspeciales(String descripcion, double peso, DTDimensiones dimensiones) {
         this.descripcion = descripcion;
         this.peso = peso;
-        this.dimenciones = dimenciones;
+        this.dimensiones = dimensiones;
     }
     
     // Getters
@@ -27,8 +26,8 @@ public class ArtEspeciales extends DonacionMaterial {
         return peso;
     }
     
-    public DTDimenciones getDimenciones() {
-        return dimenciones;
+    public DTDimensiones getDimensiones() {
+        return dimensiones;
     }
     
     // Setters
@@ -40,18 +39,16 @@ public class ArtEspeciales extends DonacionMaterial {
         this.peso = peso;
     }
     
-    public void setDimenciones(DTDimenciones dimenciones) {
-        this.dimenciones = dimenciones;
+    public void setDimensiones(DTDimensiones dimensiones) {
+        this.dimensiones = dimensiones;
     }
     
     @Override
     public String toString() {
         return "ArtEspeciales{" +
-                "id=" + id +
-                ", fechaIngreso=" + fechaIngreso +
                 ", descripcion='" + descripcion + '\'' +
                 ", peso=" + peso +
-                ", dimenciones=" + dimenciones +
+                ", dimensiones=" + dimensiones +
                 '}';
     }
 }

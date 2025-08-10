@@ -1,14 +1,15 @@
-package pap2025;
+package pap2025.logica;
+
+import pap2025.datatypes.DTFecha;
 
 /**
- * Clase Libro que hereda de DonacionMaterial
+ * Clase Libro que hereda de Material
  */
-public class Libro extends DonacionMaterial {
+public class Libro extends Material {
     private String titulo;
     private int cantPaginas;
     
-    public Libro(int id, DTFecha fechaIngreso, String titulo, int cantPaginas) {
-        super(id, fechaIngreso);
+    public Libro( String titulo, int cantPaginas) {
         this.titulo = titulo;
         this.cantPaginas = cantPaginas;
     }
@@ -34,8 +35,6 @@ public class Libro extends DonacionMaterial {
     @Override
     public String toString() {
         return "Libro{" +
-                "id=" + id +
-                ", fechaIngreso=" + fechaIngreso +
                 ", titulo='" + titulo + '\'' +
                 ", cantPaginas=" + cantPaginas +
                 '}';

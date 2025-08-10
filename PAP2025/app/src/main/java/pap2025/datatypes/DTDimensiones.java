@@ -1,14 +1,14 @@
-package pap2025;
+package pap2025.datatypes;
 
 /**
  * Tipo de dato para representar dimensiones
  */
-public class DTDimenciones {
+public class DTDimensiones {
     private double alto;
     private double ancho;
     private double profundidad;
     
-    public DTDimenciones(double alto, double ancho, double profundidad) {
+    public DTDimensiones(double alto, double ancho, double profundidad) {
         this.alto = alto;
         this.ancho = ancho;
         this.profundidad = profundidad;
