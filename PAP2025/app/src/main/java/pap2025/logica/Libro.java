@@ -9,7 +9,8 @@ public class Libro extends Material {
     private String titulo;
     private int cantPaginas;
     
-    public Libro( String titulo, int cantPaginas) {
+    public Libro(int id, DTFecha fechaIngreso, String titulo, int cantPaginas) {
+        super(id, fechaIngreso);
         this.titulo = titulo;
         this.cantPaginas = cantPaginas;
     }
@@ -35,6 +36,8 @@ public class Libro extends Material {
     @Override
     public String toString() {
         return "Libro{" +
+                "id=" + getId() +
+                ", fechaIngreso=" + getFechaIngreso() +
                 ", titulo='" + titulo + '\'' +
                 ", cantPaginas=" + cantPaginas +
                 '}';

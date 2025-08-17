@@ -11,7 +11,8 @@ public class ArtEspeciales extends Material {
     private double peso;
     private DTDimensiones dimensiones;
     
-    public ArtEspeciales(String descripcion, double peso, DTDimensiones dimensiones) {
+    public ArtEspeciales(int id, DTFecha fechaIngreso, String descripcion, double peso, DTDimensiones dimensiones) {
+        super(id, fechaIngreso);
         this.descripcion = descripcion;
         this.peso = peso;
         this.dimensiones = dimensiones;
@@ -46,6 +47,8 @@ public class ArtEspeciales extends Material {
     @Override
     public String toString() {
         return "ArtEspeciales{" +
+                "id=" + getId() +
+                ", fechaIngreso=" + getFechaIngreso() +
                 ", descripcion='" + descripcion + '\'' +
                 ", peso=" + peso +
                 ", dimensiones=" + dimensiones +

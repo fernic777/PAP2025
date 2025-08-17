@@ -1,20 +1,47 @@
-package pap2025;
+package pap2025.logica;
+
+import pap2025.datatypes.DTFecha;
 
 /**
- * Clase Prestamo
+ * Clase Prestamo que representa un préstamo de material
  */
 public class Prestamo {
+    private int id;
+    private Material material;
+    private Lector lector;
+    private Bibliotecario bibliotecario;
     private DTFecha fechaSolicitada;
     private DTFecha fechaDevolucion;
     private EstadoP estadoP;
     
-    public Prestamo(DTFecha fechaSolicitada, DTFecha fechaDevolucion, EstadoP estadoP) {
+    public Prestamo(int id, Material material, Lector lector, Bibliotecario bibliotecario, 
+                   DTFecha fechaSolicitada, DTFecha fechaDevolucion, EstadoP estadoP) {
+        this.id = id;
+        this.material = material;
+        this.lector = lector;
+        this.bibliotecario = bibliotecario;
         this.fechaSolicitada = fechaSolicitada;
         this.fechaDevolucion = fechaDevolucion;
         this.estadoP = estadoP;
     }
     
     // Getters
+    public int getId() {
+        return id;
+    }
+    
+    public Material getMaterial() {
+        return material;
+    }
+    
+    public Lector getLector() {
+        return lector;
+    }
+    
+    public Bibliotecario getBibliotecario() {
+        return bibliotecario;
+    }
+    
     public DTFecha getFechaSolicitada() {
         return fechaSolicitada;
     }
@@ -28,6 +55,22 @@ public class Prestamo {
     }
     
     // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+    
+    public void setLector(Lector lector) {
+        this.lector = lector;
+    }
+    
+    public void setBibliotecario(Bibliotecario bibliotecario) {
+        this.bibliotecario = bibliotecario;
+    }
+    
     public void setFechaSolicitada(DTFecha fechaSolicitada) {
         this.fechaSolicitada = fechaSolicitada;
     }
@@ -43,7 +86,12 @@ public class Prestamo {
     @Override
     public String toString() {
         return "Prestamo{" +
-                "fechaSolicitada=" + fechaSolicitada +
+                "id=" + id +
+                ", material=" + (material instanceof Libro ? ((Libro) material).getTitulo() : 
+                                 material instanceof ArtEspeciales ? ((ArtEspeciales) material).getDescripcion() : "Material") +
+                ", lector=" + lector.getNombre() +
+                ", bibliotecario=" + bibliotecario.getNombre() +
+                ", fechaSolicitada=" + fechaSolicitada +
                 ", fechaDevolucion=" + fechaDevolucion +
                 ", estadoP=" + estadoP +
                 '}';

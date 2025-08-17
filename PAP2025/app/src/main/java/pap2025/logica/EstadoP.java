@@ -1,13 +1,10 @@
-package pap2025;
+package pap2025.logica;
 
 /**
  * Enum para representar el estado de un Préstamo
  */
 public enum EstadoP {
-    SOLICITADO,
-    APROBADO,
-    ENTREGADO,
+    PENDIENTE,
     DEVUELTO,
-    VENCIDO,
-    CANCELADO
+    ENCURSO
 }

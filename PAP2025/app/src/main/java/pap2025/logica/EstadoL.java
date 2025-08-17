@@ -1,4 +1,4 @@
-package pap2025;
+package pap2025.logica;
 
 /**
  * Enum para representar el estado de un Lector

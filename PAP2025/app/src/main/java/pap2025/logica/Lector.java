@@ -1,4 +1,4 @@
-package pap2025;
+package pap2025.logica;
 
 import pap2025.datatypes.DTFecha;
 

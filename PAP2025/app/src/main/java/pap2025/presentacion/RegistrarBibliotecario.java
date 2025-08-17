@@ -1,35 +1,32 @@
 package pap2025.presentacion;
 
 import pap2025.interfaz.IControladorFachada;
-import pap2025.logica.Zona;
-import pap2025.datatypes.DTFecha;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-public class RegistrarLector extends JInternalFrame {
+/**
+ * Ventana para registrar nuevos bibliotecarios
+ */
+public class RegistrarBibliotecario extends JInternalFrame {
     
     private IControladorFachada controladorFachada;
     
     // Componentes de la interfaz
     private JTextField txtNombre;
     private JTextField txtEmail;
-    private JTextField txtDireccion;
-    private JTextField txtFechaRegistro;
-    private JComboBox<Zona> cmbZona;
+    private JTextField txtNroEmpleado;
     private JButton btnAceptar;
     private JButton btnCancelar;
     
-    public RegistrarLector(IControladorFachada controladorFachada) {
+    public RegistrarBibliotecario(IControladorFachada controladorFachada) {
         this.controladorFachada = controladorFachada;
         
         // Configuración del frame - Ventana más grande para mejor visibilidad
-        setTitle("Registrar Nuevo Lector");
-        setSize(600, 450);
+        setTitle("Registrar Nuevo Bibliotecario");
+        setSize(600, 400);
         setClosable(true);
         setResizable(false);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -39,7 +36,7 @@ public class RegistrarLector extends JInternalFrame {
         initLayout();
         initEvents();
         
-        // Centrar en pantalla (JInternalFrame no tiene setLocationRelativeTo)
+        // Centrar en pantalla
         setLocation(100, 100);
     }
     
@@ -48,25 +45,17 @@ public class RegistrarLector extends JInternalFrame {
         txtNombre = new JTextField(35);
         txtNombre.setFont(new Font("Arial", Font.PLAIN, 14));
         txtNombre.setPreferredSize(new Dimension(300, 30));
+        txtNombre.setToolTipText("Ingrese el nombre completo del bibliotecario");
         
         txtEmail = new JTextField(35);
         txtEmail.setFont(new Font("Arial", Font.PLAIN, 14));
         txtEmail.setPreferredSize(new Dimension(300, 30));
+        txtEmail.setToolTipText("Ingrese el email del bibliotecario (ejemplo: bibliotecario@biblioteca.com)");
         
-        txtDireccion = new JTextField(35);
-        txtDireccion.setFont(new Font("Arial", Font.PLAIN, 14));
-        txtDireccion.setPreferredSize(new Dimension(300, 30));
-        
-        txtFechaRegistro = new JTextField(35);
-        txtFechaRegistro.setFont(new Font("Arial", Font.PLAIN, 14));
-        txtFechaRegistro.setPreferredSize(new Dimension(300, 30));
-        txtFechaRegistro.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        txtFechaRegistro.setEditable(false);
-        txtFechaRegistro.setBackground(new Color(240, 240, 240)); // Color gris claro para campo no editable
-        
-        cmbZona = new JComboBox<>(Zona.values());
-        cmbZona.setFont(new Font("Arial", Font.PLAIN, 14));
-        cmbZona.setPreferredSize(new Dimension(300, 30));
+        txtNroEmpleado = new JTextField(35);
+        txtNroEmpleado.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtNroEmpleado.setPreferredSize(new Dimension(300, 30));
+        txtNroEmpleado.setToolTipText("Ingrese el número de empleado (debe ser un número positivo)");
         
         // Botones más grandes y con mejor apariencia
         btnAceptar = new JButton("Aceptar");
@@ -88,7 +77,7 @@ public class RegistrarLector extends JInternalFrame {
         // Panel principal con GridBagLayout para mejor organización
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        mainPanel.setBackground(new Color(248, 248, 248)); // Fondo gris muy claro
+        mainPanel.setBackground(new Color(248, 248, 248));
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -96,7 +85,7 @@ public class RegistrarLector extends JInternalFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
         // Título principal
-        JLabel tituloLabel = new JLabel("REGISTRO DE NUEVO LECTOR");
+        JLabel tituloLabel = new JLabel("REGISTRO DE NUEVO BIBLIOTECARIO");
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 18));
         tituloLabel.setForeground(new Color(70, 130, 180));
         tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -116,6 +105,7 @@ public class RegistrarLector extends JInternalFrame {
         gbc.gridx = 0; gbc.gridy = 2;
         JLabel lblNombre = new JLabel("Nombre:");
         lblNombre.setFont(new Font("Arial", Font.BOLD, 14));
+        lblNombre.setForeground(new Color(70, 130, 180));
         mainPanel.add(lblNombre, gbc);
         
         gbc.gridx = 1;
@@ -125,37 +115,21 @@ public class RegistrarLector extends JInternalFrame {
         gbc.gridx = 0; gbc.gridy = 3;
         JLabel lblEmail = new JLabel("Email:");
         lblEmail.setFont(new Font("Arial", Font.BOLD, 14));
+        lblEmail.setForeground(new Color(70, 130, 180));
         mainPanel.add(lblEmail, gbc);
         
         gbc.gridx = 1;
         mainPanel.add(txtEmail, gbc);
         
-        // Dirección
+        // Número de Empleado
         gbc.gridx = 0; gbc.gridy = 4;
-        JLabel lblDireccion = new JLabel("Dirección:");
-        lblDireccion.setFont(new Font("Arial", Font.BOLD, 14));
-        mainPanel.add(lblDireccion, gbc);
+        JLabel lblNroEmpleado = new JLabel("Número de Empleado:");
+        lblNroEmpleado.setFont(new Font("Arial", Font.BOLD, 14));
+        lblNroEmpleado.setForeground(new Color(70, 130, 180));
+        mainPanel.add(lblNroEmpleado, gbc);
         
         gbc.gridx = 1;
-        mainPanel.add(txtDireccion, gbc);
-        
-        // Fecha de Registro
-        gbc.gridx = 0; gbc.gridy = 5;
-        JLabel lblFecha = new JLabel("Fecha de Registro:");
-        lblFecha.setFont(new Font("Arial", Font.BOLD, 14));
-        mainPanel.add(lblFecha, gbc);
-        
-        gbc.gridx = 1;
-        mainPanel.add(txtFechaRegistro, gbc);
-        
-        // Zona
-        gbc.gridx = 0; gbc.gridy = 6;
-        JLabel lblZona = new JLabel("Zona:");
-        lblZona.setFont(new Font("Arial", Font.BOLD, 14));
-        mainPanel.add(lblZona, gbc);
-        
-        gbc.gridx = 1;
-        mainPanel.add(cmbZona, gbc);
+        mainPanel.add(txtNroEmpleado, gbc);
         
         // Panel de botones centrado
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -165,26 +139,22 @@ public class RegistrarLector extends JInternalFrame {
         buttonPanel.add(btnCancelar);
         
         // Agregar panel de botones al final
-        gbc.gridx = 0; gbc.gridy = 7;
+        gbc.gridx = 0; gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(buttonPanel, gbc);
         
         add(mainPanel, BorderLayout.CENTER);
         
-        // Agregar tooltips para mejor usabilidad
-        txtNombre.setToolTipText("Ingrese el nombre completo del lector");
-        txtEmail.setToolTipText("Ingrese el email del lector (ejemplo: usuario@email.com)");
-        txtDireccion.setToolTipText("Ingrese la dirección completa del lector");
-        txtFechaRegistro.setToolTipText("Fecha automática del sistema (no editable)");
-        cmbZona.setToolTipText("Seleccione la zona de la biblioteca donde se registrará el lector");
+        // Inicialmente deshabilitar el botón de aceptar
+        btnAceptar.setEnabled(false);
     }
     
     private void initEvents() {
         btnAceptar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                registrarLector();
+                registrarBibliotecario();
             }
         });
         
@@ -208,26 +178,22 @@ public class RegistrarLector extends JInternalFrame {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCampos(); }
         });
         
-        txtDireccion.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        txtNroEmpleado.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void changedUpdate(javax.swing.event.DocumentEvent e) { verificarCampos(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { verificarCampos(); }
             public void insertUpdate(javax.swing.event.DocumentEvent e) { verificarCampos(); }
         });
-        
-        // Inicialmente deshabilitar el botón de aceptar
-        btnAceptar.setEnabled(false);
     }
     
-    private void registrarLector() {
+    private void registrarBibliotecario() {
         String nombre = txtNombre.getText().trim();
         String email = txtEmail.getText().trim();
-        String direccion = txtDireccion.getText().trim();
-        Zona zona = (Zona) cmbZona.getSelectedItem();
+        String nroEmpleadoStr = txtNroEmpleado.getText().trim();
         
         // Validaciones
         if (nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese el nombre del lector", 
+                "Por favor ingrese el nombre del bibliotecario", 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
             txtNombre.requestFocus();
@@ -236,7 +202,7 @@ public class RegistrarLector extends JInternalFrame {
         
         if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese el email del lector", 
+                "Por favor ingrese el email del bibliotecario", 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
             txtEmail.requestFocus();
@@ -252,41 +218,76 @@ public class RegistrarLector extends JInternalFrame {
             return;
         }
         
-        if (direccion.isEmpty()) {
+        if (nroEmpleadoStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Por favor ingrese la dirección del lector", 
+                "Por favor ingrese el número de empleado", 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
-            txtDireccion.requestFocus();
+            txtNroEmpleado.requestFocus();
             return;
         }
         
-        // Crear fecha de registro
-        DTFecha fechaRegistro = new DTFecha(
-            LocalDate.now().getDayOfMonth(),
-            LocalDate.now().getMonthValue(),
-            LocalDate.now().getYear()
-        );
+        int nroEmpleado;
+        try {
+            nroEmpleado = Integer.parseInt(nroEmpleadoStr);
+            if (nroEmpleado <= 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "El número de empleado debe ser un número positivo", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                txtNroEmpleado.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                "El número de empleado debe ser un número válido", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            txtNroEmpleado.requestFocus();
+            return;
+        }
         
-        // Intentar registrar el lector
-        boolean exito = controladorFachada.registrarLector(nombre, email, direccion, fechaRegistro, zona);
+        // Verificar que no exista ya un usuario con ese email
+        if (controladorFachada.existeUsuario(email)) {
+            JOptionPane.showMessageDialog(this, 
+                "Ya existe un usuario con ese email en el sistema", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            txtEmail.requestFocus();
+            return;
+        }
+        
+        // Verificar que no exista ya un bibliotecario con ese número de empleado
+        if (controladorFachada.existeBibliotecarioPorNroEmpleado(nroEmpleado)) {
+            JOptionPane.showMessageDialog(this, 
+                "Ya existe un bibliotecario con ese número de empleado", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            txtNroEmpleado.requestFocus();
+            return;
+        }
+        
+        // Intentar registrar el bibliotecario
+        boolean exito = controladorFachada.registrarBibliotecario(nombre, email, nroEmpleado);
         
         if (exito) {
             JOptionPane.showMessageDialog(this, 
-                "Lector registrado exitosamente:\n\n" +
-                "Nombre: " + nombre + "\n" +
-                "Email: " + email + "\n" +
-                "Zona: " + zona, 
-                "Éxito", 
+                "✅ Bibliotecario registrado exitosamente!\n\n" +
+                "📋 Detalles del registro:\n" +
+                "   • Nombre: " + nombre + "\n" +
+                "   • Email: " + email + "\n" +
+                "   • Número de Empleado: " + nroEmpleado + "\n\n" +
+                "El bibliotecario ahora puede gestionar préstamos en el sistema.", 
+                "Registro Exitoso", 
                 JOptionPane.INFORMATION_MESSAGE);
             
             // Limpiar formulario
             limpiarFormulario();
         } else {
             JOptionPane.showMessageDialog(this, 
-                "Error al registrar el lector.\n" +
-                "Verifique que el email no esté ya registrado.", 
-                "Error", 
+                "❌ Error al registrar el bibliotecario.\n\n" +
+                "Por favor, intente nuevamente o contacte al administrador del sistema.", 
+                "Error en el Registro", 
                 JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -294,16 +295,15 @@ public class RegistrarLector extends JInternalFrame {
     private void limpiarFormulario() {
         txtNombre.setText("");
         txtEmail.setText("");
-        txtDireccion.setText("");
-        cmbZona.setSelectedIndex(0);
-        txtNombre.requestFocus();
+        txtNroEmpleado.setText("");
         btnAceptar.setEnabled(false);
+        txtNombre.requestFocus();
     }
     
     private void verificarCampos() {
         boolean camposValidos = !txtNombre.getText().trim().isEmpty() && 
                                !txtEmail.getText().trim().isEmpty() && 
-                               !txtDireccion.getText().trim().isEmpty();
+                               !txtNroEmpleado.getText().trim().isEmpty();
         
         btnAceptar.setEnabled(camposValidos);
     }

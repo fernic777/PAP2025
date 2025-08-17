@@ -1,4 +1,4 @@
-package pap2025;
+package pap2025.datatypes;
 
 /**
  * Tipo de dato para representar fechas
