@@ -1,10 +1,21 @@
 package pap2025.logica;
 
+import javax.persistence.*;
+
 /**
  * Clase Bibliotecario que hereda de Usuario
  */
+@Entity
+@Table(name = "bibliotecarios")
+@PrimaryKeyJoinColumn(name = "usuario_id")
 public class Bibliotecario extends Usuario {
+    @Column(name = "nro_empleado", nullable = false, unique = true)
     private int nroEmpleado;
+    
+    // Constructor sin argumentos requerido por JPA
+    public Bibliotecario() {
+        super();
+    }
     
     public Bibliotecario(String nombre, String email, int nroEmpleado) {
         super(nombre, email);

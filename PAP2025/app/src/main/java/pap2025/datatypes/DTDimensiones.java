@@ -1,12 +1,25 @@
 package pap2025.datatypes;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Column;
+
 /**
  * Tipo de dato para representar dimensiones
  */
+@Embeddable
 public class DTDimensiones {
+    @Column(name = "alto")
     private double alto;
+    
+    @Column(name = "ancho")
     private double ancho;
+    
+    @Column(name = "profundidad")
     private double profundidad;
+    
+    // Constructor sin argumentos requerido por JPA
+    public DTDimensiones() {
+    }
     
     public DTDimensiones(double alto, double ancho, double profundidad) {
         this.alto = alto;

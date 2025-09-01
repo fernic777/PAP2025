@@ -1,18 +1,53 @@
 package pap2025.logica;
 
 import pap2025.datatypes.DTFecha;
+import javax.persistence.*;
 
 /**
  * Clase Prestamo que representa un préstamo de material
  */
+@Entity
+@Table(name = "prestamos")
 public class Prestamo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "material_id", nullable = false)
     private Material material;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lector_id", nullable = false)
     private Lector lector;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bibliotecario_id", nullable = false)
     private Bibliotecario bibliotecario;
+    
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "dia", column = @Column(name = "fecha_solicitada_dia")),
+        @AttributeOverride(name = "mes", column = @Column(name = "fecha_solicitada_mes")),
+        @AttributeOverride(name = "anio", column = @Column(name = "fecha_solicitada_anio"))
+    })
     private DTFecha fechaSolicitada;
+    
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "dia", column = @Column(name = "fecha_devolucion_dia")),
+        @AttributeOverride(name = "mes", column = @Column(name = "fecha_devolucion_mes")),
+        @AttributeOverride(name = "anio", column = @Column(name = "fecha_devolucion_anio"))
+    })
     private DTFecha fechaDevolucion;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
     private EstadoP estadoP;
+    
+    // Constructor sin argumentos requerido por JPA
+    public Prestamo() {
+    }
     
     public Prestamo(int id, Material material, Lector lector, Bibliotecario bibliotecario, 
                    DTFecha fechaSolicitada, DTFecha fechaDevolucion, EstadoP estadoP) {

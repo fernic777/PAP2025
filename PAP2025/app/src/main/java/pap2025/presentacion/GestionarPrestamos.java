@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Ventana para gestionar préstamos de materiales
  */
-public class GestionarPrestamos extends JFrame {
+public class GestionarPrestamos extends JInternalFrame {
     
     // Controlador
     private IControladorFachada controladorFachada;
@@ -39,14 +39,18 @@ public class GestionarPrestamos extends JFrame {
     
 
     
+
+    
     public GestionarPrestamos(IControladorFachada controladorFachada) {
         this.controladorFachada = controladorFachada;
         
-        // Configuración del frame
+        // Configuración del frame interno
         setTitle("Gestión de Préstamos - Biblioteca");
         setSize(900, 700);
         setResizable(true);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setClosable(true);
+        setMaximizable(true);
+        setIconifiable(true);
         
         // Inicializar componentes
         initComponents();
@@ -54,7 +58,7 @@ public class GestionarPrestamos extends JFrame {
         initEvents();
         
         // Centrar en pantalla
-        setLocation(100, 100);
+        setLocation(50, 50);
         
         // Cargar datos iniciales
         cargarDatos();
@@ -158,6 +162,8 @@ public class GestionarPrestamos extends JFrame {
         tablaPrestamos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
         tablaPrestamos.getTableHeader().setBackground(new Color(70, 130, 180));
         tablaPrestamos.getTableHeader().setForeground(Color.WHITE);
+        
+
     }
     
     private void initLayout() {
@@ -289,6 +295,8 @@ public class GestionarPrestamos extends JFrame {
                 dispose();
             }
         });
+        
+
     }
     
     private void cargarDatos() {
@@ -322,6 +330,8 @@ public class GestionarPrestamos extends JFrame {
             comboBibliotecario.addItem(bibliotecario);
             System.out.println("DEBUG: Agregado bibliotecario: " + bibliotecario.getNombre() + " (Nro. " + bibliotecario.getNroEmpleado() + ")");
         }
+        
+
         
         // Cargar tabla de préstamos
         cargarTablaPrestamos();
@@ -463,4 +473,6 @@ public class GestionarPrestamos extends JFrame {
         }
         return String.format("%02d/%02d/%04d", fecha.getDia(), fecha.getMes(), fecha.getAnio());
     }
+    
+
 }

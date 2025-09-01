@@ -132,6 +132,16 @@ public class VentanaPrincipal extends JFrame {
         menuPrestamos.add(menuItemGestionarPrestamos);
         menuPrestamos.addSeparator();
         menuPrestamos.add(menuItemActualizarEstadoPrestamo);
+        menuPrestamos.addSeparator();
+        
+        JMenuItem menuItemPanelAdmin = new JMenuItem("👑 Panel de Administrador");
+        menuItemPanelAdmin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirPanelAdministrador();
+            }
+        });
+        menuPrestamos.add(menuItemPanelAdmin);
         
         // Agregar menús a la barra
         menuBar.add(menuUsuarios);
@@ -278,30 +288,71 @@ public class VentanaPrincipal extends JFrame {
     }
     
     private void abrirGestionarPrestamos() {
-        // Crear nueva ventana de gestión de préstamos (JFrame independiente)
+        // Verificar si ya hay una ventana abierta
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            if (frame instanceof GestionarPrestamos) {
+                frame.toFront();
+                return;
+            }
+        }
+        
+        // Crear nueva ventana de gestión de préstamos
         GestionarPrestamos gestionarPrestamos = new GestionarPrestamos(controladorFachada);
+        desktopPane.add(gestionarPrestamos);
         gestionarPrestamos.setVisible(true);
         
-        // Centrar en pantalla
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Centrar en el desktop pane
+        Dimension desktopSize = desktopPane.getSize();
         Dimension frameSize = gestionarPrestamos.getSize();
         gestionarPrestamos.setLocation(
-            (screenSize.width - frameSize.width) / 2,
-            (screenSize.height - frameSize.height) / 2
+            (desktopSize.width - frameSize.width) / 2,
+            (desktopSize.height - frameSize.height) / 2
         );
     }
     
     private void abrirActualizarEstadoPrestamo() {
-        // Crear nueva ventana de actualización de estado (JFrame independiente)
+        // Verificar si ya hay una ventana abierta
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            if (frame instanceof ActualizarEstadoPrestamo) {
+                frame.toFront();
+                return;
+            }
+        }
+        
+        // Crear nueva ventana de actualización de estado
         ActualizarEstadoPrestamo actualizarEstadoPrestamo = new ActualizarEstadoPrestamo(controladorFachada);
+        desktopPane.add(actualizarEstadoPrestamo);
         actualizarEstadoPrestamo.setVisible(true);
         
-        // Centrar en pantalla
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Centrar en el desktop pane
+        Dimension desktopSize = desktopPane.getSize();
         Dimension frameSize = actualizarEstadoPrestamo.getSize();
         actualizarEstadoPrestamo.setLocation(
-            (screenSize.width - frameSize.width) / 2,
-            (screenSize.height - frameSize.height) / 2
+            (desktopSize.width - frameSize.width) / 2,
+            (desktopSize.height - frameSize.height) / 2
+        );
+    }
+    
+    private void abrirPanelAdministrador() {
+        // Verificar si ya hay una ventana abierta
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            if (frame instanceof PanelAdministrador) {
+                frame.toFront();
+                return;
+            }
+        }
+        
+        // Crear nueva ventana del panel de administrador
+        PanelAdministrador panelAdmin = new PanelAdministrador(controladorFachada);
+        desktopPane.add(panelAdmin);
+        panelAdmin.setVisible(true);
+        
+        // Centrar en el desktop pane
+        Dimension desktopSize = desktopPane.getSize();
+        Dimension frameSize = panelAdmin.getSize();
+        panelAdmin.setLocation(
+            (desktopSize.width - frameSize.width) / 2,
+            (desktopSize.height - frameSize.height) / 2
         );
     }
     

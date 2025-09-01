@@ -66,7 +66,7 @@ public class ControladorFachada implements IControladorFachada {
         
         // Crear el usuario
         Usuario usuario = new Usuario(nombre, email);
-        manejadorUsuario.getListaUsuarios().add(usuario);
+        manejadorUsuario.guardarUsuario(usuario);
         
         System.out.println("Usuario creado: " + usuario.getNombre() + " - " + usuario.getEmail());
         return true;
@@ -78,12 +78,7 @@ public class ControladorFachada implements IControladorFachada {
             return null;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario.getEmail().equals(email)) {
-                return usuario;
-            }
-        }
-        return null;
+        return manejadorUsuario.obtenerUsuarioPorEmail(email);
     }
     
     @Override
@@ -92,12 +87,7 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario.getEmail().equals(email)) {
-                return true;
-            }
-        }
-        return false;
+        return manejadorUsuario.obtenerUsuarioPorEmail(email) != null;
     }
     
     @Override
@@ -109,13 +99,13 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario.getEmail().equals(email)) {
-                String nombreAnterior = usuario.getNombre();
-                usuario.setNombre(nuevoNombre);
-                System.out.println("Usuario editado: " + email + " - Nombre anterior: " + nombreAnterior + " - Nuevo nombre: " + nuevoNombre);
-                return true;
-            }
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        if (usuario != null) {
+            String nombreAnterior = usuario.getNombre();
+            usuario.setNombre(nuevoNombre);
+            manejadorUsuario.actualizarUsuario(usuario);
+            System.out.println("Usuario editado: " + email + " - Nombre anterior: " + nombreAnterior + " - Nuevo nombre: " + nuevoNombre);
+            return true;
         }
         return false;
     }
@@ -126,13 +116,11 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (int i = 0; i < manejadorUsuario.getListaUsuarios().size(); i++) {
-            Usuario usuario = manejadorUsuario.getListaUsuarios().get(i);
-            if (usuario.getEmail().equals(email)) {
-                manejadorUsuario.getListaUsuarios().remove(i);
-                System.out.println("Usuario eliminado: " + email);
-                return true;
-            }
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        if (usuario != null) {
+            manejadorUsuario.eliminarUsuario(usuario);
+            System.out.println("Usuario eliminado: " + email);
+            return true;
         }
         return false;
     }
@@ -174,7 +162,7 @@ public class ControladorFachada implements IControladorFachada {
         
         // Crear el lector con estado ACTIVO por defecto
         Lector lector = new Lector(nombre, email, direccion, fechaRegistro, EstadoL.ACTIVO, zona);
-        manejadorUsuario.getListaUsuarios().add(lector);
+        manejadorUsuario.guardarUsuario(lector);
         
         System.out.println("Lector creado: " + lector.getNombre() + " - " + lector.getEmail() + " - Estado: " + lector.getEstadoL());
         return true;
@@ -186,10 +174,9 @@ public class ControladorFachada implements IControladorFachada {
             return null;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Lector && usuario.getEmail().equals(email)) {
-                return (Lector) usuario;
-            }
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        if (usuario instanceof Lector) {
+            return (Lector) usuario;
         }
         return null;
     }
@@ -200,12 +187,8 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Lector && usuario.getEmail().equals(email)) {
-                return true;
-            }
-        }
-        return false;
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        return usuario instanceof Lector;
     }
     
     @Override
@@ -220,18 +203,18 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Lector && usuario.getEmail().equals(email)) {
-                Lector lector = (Lector) usuario;
-                EstadoL estadoAnterior = lector.getEstadoL();
-                lector.setEstadoL(nuevoEstado);
-                
-                System.out.println("Estado del lector modificado por ADMINISTRADOR:");
-                System.out.println("  - Email: " + email);
-                System.out.println("  - Estado anterior: " + estadoAnterior);
-                System.out.println("  - Nuevo estado: " + nuevoEstado);
-                return true;
-            }
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        if (usuario instanceof Lector) {
+            Lector lector = (Lector) usuario;
+            EstadoL estadoAnterior = lector.getEstadoL();
+            lector.setEstadoL(nuevoEstado);
+            manejadorUsuario.actualizarUsuario(lector);
+            
+            System.out.println("Estado del lector modificado por ADMINISTRADOR:");
+            System.out.println("  - Email: " + email);
+            System.out.println("  - Estado anterior: " + estadoAnterior);
+            System.out.println("  - Nuevo estado: " + nuevoEstado);
+            return true;
         }
         
         System.out.println("ERROR: No se encontró un lector con el email: " + email);
@@ -387,7 +370,7 @@ public class ControladorFachada implements IControladorFachada {
         
         // Crear el bibliotecario
         Bibliotecario bibliotecario = new Bibliotecario(nombre, email, nroEmpleado);
-        manejadorUsuario.getListaUsuarios().add(bibliotecario);
+        manejadorUsuario.guardarUsuario(bibliotecario);
         
         System.out.println("Bibliotecario creado: " + bibliotecario.getNombre() + " - " + bibliotecario.getEmail() + " - Nro. Empleado: " + bibliotecario.getNroEmpleado());
         return true;
@@ -399,10 +382,9 @@ public class ControladorFachada implements IControladorFachada {
             return null;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Bibliotecario && usuario.getEmail().equals(email)) {
-                return (Bibliotecario) usuario;
-            }
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        if (usuario instanceof Bibliotecario) {
+            return (Bibliotecario) usuario;
         }
         return null;
     }
@@ -413,12 +395,8 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Bibliotecario && usuario.getEmail().equals(email)) {
-                return true;
-            }
-        }
-        return false;
+        Usuario usuario = manejadorUsuario.obtenerUsuarioPorEmail(email);
+        return usuario instanceof Bibliotecario;
     }
     
     @Override
@@ -427,12 +405,10 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Bibliotecario) {
-                Bibliotecario bibliotecario = (Bibliotecario) usuario;
-                if (bibliotecario.getNroEmpleado() == nroEmpleado) {
-                    return true;
-                }
+        List<Bibliotecario> bibliotecarios = manejadorUsuario.obtenerTodosLosBibliotecarios();
+        for (Bibliotecario bibliotecario : bibliotecarios) {
+            if (bibliotecario.getNroEmpleado() == nroEmpleado) {
+                return true;
             }
         }
         return false;
@@ -440,24 +416,12 @@ public class ControladorFachada implements IControladorFachada {
     
     @Override
     public List<Bibliotecario> obtenerTodosLosBibliotecarios() {
-        List<Bibliotecario> bibliotecarios = new ArrayList<>();
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Bibliotecario) {
-                bibliotecarios.add((Bibliotecario) usuario);
-            }
-        }
-        return bibliotecarios;
+        return manejadorUsuario.obtenerTodosLosBibliotecarios();
     }
     
     @Override
     public int obtenerCantidadBibliotecarios() {
-        int contador = 0;
-        for (Usuario usuario : manejadorUsuario.getListaUsuarios()) {
-            if (usuario instanceof Bibliotecario) {
-                contador++;
-            }
-        }
-        return contador;
+        return manejadorUsuario.obtenerTodosLosBibliotecarios().size();
     }
     
     @Override
@@ -475,7 +439,7 @@ public class ControladorFachada implements IControladorFachada {
         
         int id = obtenerSiguienteIdMaterial();
         Material material = new Material(id, fechaIngreso);
-        manejadorMaterial.getListaMateriales().add(material);
+        manejadorMaterial.guardarMaterial(material);
         
         System.out.println("Material creado con ID: " + id + " - Fecha ingreso: " + fechaIngreso);
         return id;
@@ -495,7 +459,7 @@ public class ControladorFachada implements IControladorFachada {
         
         int id = obtenerSiguienteIdMaterial();
         Libro libro = new Libro(id, fechaIngreso, titulo, cantPaginas);
-        manejadorMaterial.getListaMateriales().add(libro);
+        manejadorMaterial.guardarMaterial(libro);
         
         System.out.println("Libro creado con ID: " + id + " - Título: " + titulo + " - Páginas: " + cantPaginas);
         return id;
@@ -518,7 +482,7 @@ public class ControladorFachada implements IControladorFachada {
         
         int id = obtenerSiguienteIdMaterial();
         ArtEspeciales artEspecial = new ArtEspeciales(id, fechaIngreso, descripcion, peso, dimensiones);
-        manejadorMaterial.getListaMateriales().add(artEspecial);
+        manejadorMaterial.guardarMaterial(artEspecial);
         
         System.out.println("Artículo especial creado con ID: " + id + " - Descripción: " + descripcion + " - Peso: " + peso);
         return id;
@@ -526,22 +490,12 @@ public class ControladorFachada implements IControladorFachada {
     
     @Override
     public Material obtenerMaterial(int id) {
-        for (Material material : manejadorMaterial.getListaMateriales()) {
-            if (material.getId() == id) {
-                return material;
-            }
-        }
-        return null;
+        return manejadorMaterial.obtenerMaterialPorId(id);
     }
     
     @Override
     public boolean existeMaterial(int id) {
-        for (Material material : manejadorMaterial.getListaMateriales()) {
-            if (material.getId() == id) {
-                return true;
-            }
-        }
-        return false;
+        return manejadorMaterial.obtenerMaterialPorId(id) != null;
     }
     
     @Override
@@ -815,7 +769,7 @@ public class ControladorFachada implements IControladorFachada {
         
         Prestamo prestamo = new Prestamo(idPrestamo, material, lector, bibliotecario, 
                                         fechaSolicitada, fechaDevolucion, EstadoP.ENCURSO);
-        manejadorPrestamo.getListaPrestamos().add(prestamo);
+        manejadorPrestamo.guardarPrestamo(prestamo);
         
         System.out.println("✅ Préstamo creado exitosamente:");
         System.out.println("   📚 Material: " + (material instanceof Libro ? ((Libro) material).getTitulo() : 
@@ -831,17 +785,12 @@ public class ControladorFachada implements IControladorFachada {
     
     @Override
     public Prestamo obtenerPrestamo(int idPrestamo) {
-        for (Prestamo prestamo : manejadorPrestamo.getListaPrestamos()) {
-            if (prestamo.getId() == idPrestamo) {
-                return prestamo;
-            }
-        }
-        return null;
+        return manejadorPrestamo.obtenerPrestamoPorId(idPrestamo);
     }
     
     @Override
     public boolean existePrestamo(int idPrestamo) {
-        return obtenerPrestamo(idPrestamo) != null;
+        return manejadorPrestamo.obtenerPrestamoPorId(idPrestamo) != null;
     }
     
     @Override
@@ -850,13 +799,14 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        Prestamo prestamo = obtenerPrestamo(idPrestamo);
+        Prestamo prestamo = manejadorPrestamo.obtenerPrestamoPorId(idPrestamo);
         if (prestamo == null) {
             return false;
         }
         
         DTFecha fechaAnterior = prestamo.getFechaDevolucion();
         prestamo.setFechaDevolucion(nuevaFechaDevolucion);
+        manejadorPrestamo.actualizarPrestamo(prestamo);
         
         System.out.println("✅ Fecha de devolución del préstamo actualizada:");
         System.out.println("   🆔 ID Préstamo: " + idPrestamo);
@@ -872,7 +822,7 @@ public class ControladorFachada implements IControladorFachada {
             return false;
         }
         
-        Prestamo prestamo = obtenerPrestamo(idPrestamo);
+        Prestamo prestamo = manejadorPrestamo.obtenerPrestamoPorId(idPrestamo);
         if (prestamo == null) {
             System.out.println("❌ Error: No se encontró el préstamo con ID: " + idPrestamo);
             return false;
@@ -880,6 +830,7 @@ public class ControladorFachada implements IControladorFachada {
         
         EstadoP estadoAnterior = prestamo.getEstadoP();
         prestamo.setEstadoP(nuevoEstado);
+        manejadorPrestamo.actualizarPrestamo(prestamo);
         
         System.out.println("✅ Estado del préstamo actualizado exitosamente:");
         System.out.println("   🆔 ID Préstamo: " + idPrestamo);
@@ -956,5 +907,119 @@ public class ControladorFachada implements IControladorFachada {
             }
         }
         return prestamosEstado;
+    }
+    
+    // ===== MÉTODOS DE ADMINISTRADOR PARA REPORTES =====
+    
+    @Override
+    public List<Prestamo> obtenerHistorialPrestamosPorBibliotecario(String emailBibliotecario) {
+        if (emailBibliotecario == null || emailBibliotecario.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        List<Prestamo> historialBibliotecario = new ArrayList<>();
+        for (Prestamo prestamo : manejadorPrestamo.getListaPrestamos()) {
+            if (prestamo.getBibliotecario().getEmail().equals(emailBibliotecario)) {
+                historialBibliotecario.add(prestamo);
+            }
+        }
+        
+        System.out.println("📊 Historial de préstamos del bibliotecario " + emailBibliotecario + ": " + historialBibliotecario.size() + " préstamos");
+        return historialBibliotecario;
+    }
+    
+    @Override
+    public List<Object[]> obtenerReportePrestamosPorZona() {
+        List<Object[]> reportePorZona = new ArrayList<>();
+        
+        // Obtener todas las zonas
+        Zona[] zonas = Zona.values();
+        
+        for (Zona zona : zonas) {
+            int totalPrestamos = 0;
+            int prestamosEnCurso = 0;
+            int prestamosDevueltos = 0;
+            int prestamosPendientes = 0;
+            
+            for (Prestamo prestamo : manejadorPrestamo.getListaPrestamos()) {
+                if (prestamo.getLector().getZona() == zona) {
+                    totalPrestamos++;
+                    switch (prestamo.getEstadoP()) {
+                        case ENCURSO:
+                            prestamosEnCurso++;
+                            break;
+                        case DEVUELTO:
+                            prestamosDevueltos++;
+                            break;
+                        case PENDIENTE:
+                            prestamosPendientes++;
+                            break;
+                    }
+                }
+            }
+            
+            if (totalPrestamos > 0) {
+                Object[] fila = {zona, totalPrestamos, prestamosEnCurso, prestamosDevueltos, prestamosPendientes};
+                reportePorZona.add(fila);
+            }
+        }
+        
+        System.out.println("📊 Reporte de préstamos por zona generado: " + reportePorZona.size() + " zonas con actividad");
+        return reportePorZona;
+    }
+    
+    @Override
+    public List<Object[]> obtenerMaterialesConPrestamosPendientes() {
+        List<Object[]> materialesPendientes = new ArrayList<>();
+        
+        // Contar préstamos pendientes por material
+        for (Material material : manejadorMaterial.getListaMateriales()) {
+            int prestamosPendientes = 0;
+            int prestamosEnCurso = 0;
+            
+            for (Prestamo prestamo : manejadorPrestamo.getListaPrestamos()) {
+                if (prestamo.getMaterial().getId() == material.getId()) {
+                    if (prestamo.getEstadoP() == EstadoP.PENDIENTE) {
+                        prestamosPendientes++;
+                    } else if (prestamo.getEstadoP() == EstadoP.ENCURSO) {
+                        prestamosEnCurso++;
+                    }
+                }
+            }
+            
+            if (prestamosPendientes > 0 || prestamosEnCurso > 0) {
+                String nombreMaterial;
+                if (material instanceof Libro) {
+                    nombreMaterial = ((Libro) material).getTitulo();
+                } else if (material instanceof ArtEspeciales) {
+                    nombreMaterial = ((ArtEspeciales) material).getDescripcion();
+                } else {
+                    nombreMaterial = "Material ID: " + material.getId();
+                }
+                
+                Object[] fila = {material.getId(), nombreMaterial, prestamosPendientes, prestamosEnCurso, 
+                                prestamosPendientes + prestamosEnCurso};
+                materialesPendientes.add(fila);
+            }
+        }
+        
+        // Ordenar por cantidad de préstamos pendientes descendente (más pendientes primero)
+        materialesPendientes.sort((a, b) -> {
+            int pendientesA = (Integer) a[2]; // Columna 2: prestamosPendientes
+            int pendientesB = (Integer) b[2]; // Columna 2: prestamosPendientes
+            
+            // Si tienen la misma cantidad de pendientes, ordenar por total descendente
+            if (pendientesA == pendientesB) {
+                int totalA = (Integer) a[4]; // Columna 4: total
+                int totalB = (Integer) b[4]; // Columna 4: total
+                return Integer.compare(totalB, totalA);
+            }
+            
+            // Ordenar por pendientes descendente (más pendientes primero)
+            return Integer.compare(pendientesB, pendientesA);
+        });
+        
+        System.out.println("📊 Materiales con préstamos pendientes identificados: " + materialesPendientes.size() + " materiales");
+        return materialesPendientes;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Ventana para actualizar el estado de préstamos
  */
-public class ActualizarEstadoPrestamo extends JFrame {
+public class ActualizarEstadoPrestamo extends JInternalFrame {
     
     // Controlador
     private IControladorFachada controladorFachada;
@@ -33,11 +33,13 @@ public class ActualizarEstadoPrestamo extends JFrame {
     public ActualizarEstadoPrestamo(IControladorFachada controladorFachada) {
         this.controladorFachada = controladorFachada;
         
-        // Configuración del frame
+        // Configuración del frame interno
         setTitle("Actualizar Estado de Préstamo - Biblioteca");
         setSize(800, 600);
         setResizable(true);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setClosable(true);
+        setMaximizable(true);
+        setIconifiable(true);
         
         // Inicializar componentes
         initComponents();
@@ -45,7 +47,7 @@ public class ActualizarEstadoPrestamo extends JFrame {
         initEvents();
         
         // Centrar en pantalla
-        setLocation(100, 100);
+        setLocation(50, 50);
         
         // Cargar datos iniciales
         cargarTablaPrestamos();

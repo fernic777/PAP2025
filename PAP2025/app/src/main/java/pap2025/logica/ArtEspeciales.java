@@ -2,14 +2,28 @@ package pap2025.logica;
 
 import pap2025.datatypes.DTDimensiones;
 import pap2025.datatypes.DTFecha;
+import javax.persistence.*;
 
 /**
  * Clase ArtEspeciales que hereda de Material
  */
+@Entity
+@Table(name = "articulos_especiales")
+@PrimaryKeyJoinColumn(name = "material_id")
 public class ArtEspeciales extends Material {
+    @Column(name = "descripcion", nullable = false, length = 500)
     private String descripcion;
+    
+    @Column(name = "peso", nullable = false)
     private double peso;
+    
+    @Embedded
     private DTDimensiones dimensiones;
+    
+    // Constructor sin argumentos requerido por JPA
+    public ArtEspeciales() {
+        super();
+    }
     
     public ArtEspeciales(int id, DTFecha fechaIngreso, String descripcion, double peso, DTDimensiones dimensiones) {
         super(id, fechaIngreso);

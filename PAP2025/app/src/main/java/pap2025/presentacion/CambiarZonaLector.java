@@ -65,7 +65,7 @@ public class CambiarZonaLector extends JInternalFrame {
         // Botones más grandes y con mejor apariencia
         btnBuscar = new JButton("Buscar Lector");
         btnBuscar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnBuscar.setPreferredSize(new Dimension(120, 35));
+        btnBuscar.setPreferredSize(new Dimension(150, 35));
         btnBuscar.setBackground(new Color(70, 130, 180)); // Azul acero
         btnBuscar.setForeground(Color.WHITE);
         

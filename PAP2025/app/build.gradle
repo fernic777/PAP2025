@@ -22,11 +22,30 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
+    
+    // Hibernate ORM
+    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
+    
+    // JPA API
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    
+    // PostgreSQL Driver
+    implementation 'org.postgresql:postgresql:42.6.0'
+    
+    // Hibernate Connection Pool (C3P0)
+    implementation 'org.hibernate:hibernate-c3p0:5.6.15.Final'
 }
 
 application {
     // Define the main class for the application.
     mainClass = 'pap2025.App'
+}
+
+// Task para ejecutar CrearTablasIniciales
+task crearTablas(type: JavaExec) {
+    group = 'application'
+    mainClass = 'pap2025.persistencia.CrearTablasIniciales'
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.named('test') {

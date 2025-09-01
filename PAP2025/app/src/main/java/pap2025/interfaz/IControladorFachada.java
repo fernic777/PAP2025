@@ -499,4 +499,25 @@ public interface IControladorFachada {
      * @return Lista de préstamos con el estado especificado
      */
     public List<Prestamo> obtenerPrestamosPorEstado(EstadoP estado);
+    
+    // ===== MÉTODOS DE ADMINISTRADOR PARA REPORTES =====
+    
+    /**
+     * Obtiene el historial de préstamos gestionados por un bibliotecario específico
+     * @param emailBibliotecario Email del bibliotecario
+     * @return Lista de préstamos gestionados por el bibliotecario
+     */
+    public List<Prestamo> obtenerHistorialPrestamosPorBibliotecario(String emailBibliotecario);
+    
+    /**
+     * Obtiene un reporte de préstamos por zona para análisis de uso
+     * @return Lista de préstamos agrupados por zona
+     */
+    public List<Object[]> obtenerReportePrestamosPorZona();
+    
+    /**
+     * Identifica materiales con muchos préstamos pendientes para priorizar devolución
+     * @return Lista de materiales con cantidad de préstamos pendientes
+     */
+    public List<Object[]> obtenerMaterialesConPrestamosPendientes();
 }
