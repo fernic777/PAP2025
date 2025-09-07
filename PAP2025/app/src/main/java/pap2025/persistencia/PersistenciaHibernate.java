@@ -258,7 +258,11 @@ public class PersistenciaHibernate {
     public static List<Prestamo> obtenerTodosLosPrestamos() {
         Session session = ConfiguracionBD.getSessionFactory().openSession();
         try {
-            Query<Prestamo> query = session.createQuery("FROM Prestamo", Prestamo.class);
+            Query<Prestamo> query = session.createQuery(
+                "SELECT DISTINCT p FROM Prestamo p " +
+                "LEFT JOIN FETCH p.material " +
+                "LEFT JOIN FETCH p.lector " +
+                "LEFT JOIN FETCH p.bibliotecario", Prestamo.class);
             return query.list();
         } finally {
             session.close();
@@ -268,7 +272,12 @@ public class PersistenciaHibernate {
     public static Prestamo obtenerPrestamoPorId(int id) {
         Session session = ConfiguracionBD.getSessionFactory().openSession();
         try {
-            Query<Prestamo> query = session.createQuery("FROM Prestamo WHERE id = :id", Prestamo.class);
+            Query<Prestamo> query = session.createQuery(
+                "SELECT DISTINCT p FROM Prestamo p " +
+                "LEFT JOIN FETCH p.material " +
+                "LEFT JOIN FETCH p.lector " +
+                "LEFT JOIN FETCH p.bibliotecario " +
+                "WHERE p.id = :id", Prestamo.class);
             query.setParameter("id", id);
             return query.uniqueResult();
         } finally {
@@ -280,7 +289,11 @@ public class PersistenciaHibernate {
         Session session = ConfiguracionBD.getSessionFactory().openSession();
         try {
             Query<Prestamo> query = session.createQuery(
-                "FROM Prestamo p JOIN FETCH p.lector l WHERE l.email = :email", Prestamo.class);
+                "SELECT DISTINCT p FROM Prestamo p " +
+                "LEFT JOIN FETCH p.material " +
+                "LEFT JOIN FETCH p.lector l " +
+                "LEFT JOIN FETCH p.bibliotecario " +
+                "WHERE l.email = :email", Prestamo.class);
             query.setParameter("email", emailLector);
             return query.list();
         } finally {
@@ -292,7 +305,11 @@ public class PersistenciaHibernate {
         Session session = ConfiguracionBD.getSessionFactory().openSession();
         try {
             Query<Prestamo> query = session.createQuery(
-                "FROM Prestamo p JOIN FETCH p.bibliotecario b WHERE b.email = :email", Prestamo.class);
+                "SELECT DISTINCT p FROM Prestamo p " +
+                "LEFT JOIN FETCH p.material " +
+                "LEFT JOIN FETCH p.lector " +
+                "LEFT JOIN FETCH p.bibliotecario b " +
+                "WHERE b.email = :email", Prestamo.class);
             query.setParameter("email", emailBibliotecario);
             return query.list();
         } finally {
@@ -303,7 +320,12 @@ public class PersistenciaHibernate {
     public static List<Prestamo> obtenerPrestamosPorEstado(EstadoP estado) {
         Session session = ConfiguracionBD.getSessionFactory().openSession();
         try {
-            Query<Prestamo> query = session.createQuery("FROM Prestamo WHERE estadoP = :estado", Prestamo.class);
+            Query<Prestamo> query = session.createQuery(
+                "SELECT DISTINCT p FROM Prestamo p " +
+                "LEFT JOIN FETCH p.material " +
+                "LEFT JOIN FETCH p.lector " +
+                "LEFT JOIN FETCH p.bibliotecario " +
+                "WHERE p.estadoP = :estado", Prestamo.class);
             query.setParameter("estado", estado);
             return query.list();
         } finally {

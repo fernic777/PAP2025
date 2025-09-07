@@ -553,9 +553,6 @@ public class ControladorFachada implements IControladorFachada {
             return null;
         }
         
-        // Obtener el siguiente ID disponible
-        int siguienteId = obtenerSiguienteIdMaterial();
-        
         // Crear fecha de ingreso actual
         DTFecha fechaIngreso = new DTFecha(
             java.time.LocalDate.now().getDayOfMonth(),
@@ -563,9 +560,9 @@ public class ControladorFachada implements IControladorFachada {
             java.time.LocalDate.now().getYear()
         );
         
-        // Crear el libro
-        Libro libro = new Libro(siguienteId, fechaIngreso, titulo, cantPaginas);
-        manejadorMaterial.getListaMateriales().add(libro);
+        // Crear el libro (el ID se genera automáticamente por la BD)
+        Libro libro = new Libro(0, fechaIngreso, titulo, cantPaginas);
+        manejadorMaterial.guardarMaterial(libro);
         
         System.out.println("Donación de libro registrada: " + titulo + " - " + cantPaginas + " páginas - ID: " + libro.getId());
         return libro.getId();
@@ -583,9 +580,6 @@ public class ControladorFachada implements IControladorFachada {
             return null;
         }
         
-        // Obtener el siguiente ID disponible
-        int siguienteId = obtenerSiguienteIdMaterial();
-        
         // Crear fecha de ingreso actual
         DTFecha fechaIngreso = new DTFecha(
             java.time.LocalDate.now().getDayOfMonth(),
@@ -593,9 +587,9 @@ public class ControladorFachada implements IControladorFachada {
             java.time.LocalDate.now().getYear()
         );
         
-        // Crear el artículo especial
-        ArtEspeciales artEspecial = new ArtEspeciales(siguienteId, fechaIngreso, descripcion, peso, dimensiones);
-        manejadorMaterial.getListaMateriales().add(artEspecial);
+        // Crear el artículo especial (el ID se genera automáticamente por la BD)
+        ArtEspeciales artEspecial = new ArtEspeciales(0, fechaIngreso, descripcion, peso, dimensiones);
+        manejadorMaterial.guardarMaterial(artEspecial);
         
         System.out.println("Donación de artículo especial registrada: " + descripcion + " - " + peso + " kg - ID: " + artEspecial.getId());
         return artEspecial.getId();
@@ -603,46 +597,22 @@ public class ControladorFachada implements IControladorFachada {
     
     @Override
     public List<Libro> obtenerTodosLosLibros() {
-        List<Libro> libros = new ArrayList<>();
-        for (Material material : manejadorMaterial.getListaMateriales()) {
-            if (material instanceof Libro) {
-                libros.add((Libro) material);
-            }
-        }
-        return libros;
+        return manejadorMaterial.obtenerTodosLosLibros();
     }
     
     @Override
     public List<ArtEspeciales> obtenerTodosLosArtEspeciales() {
-        List<ArtEspeciales> artEspeciales = new ArrayList<>();
-        for (Material material : manejadorMaterial.getListaMateriales()) {
-            if (material instanceof ArtEspeciales) {
-                artEspeciales.add((ArtEspeciales) material);
-            }
-        }
-        return artEspeciales;
+        return manejadorMaterial.obtenerTodosLosArtEspeciales();
     }
     
     @Override
     public int obtenerCantidadLibros() {
-        int contador = 0;
-        for (Material material : manejadorMaterial.getListaMateriales()) {
-            if (material instanceof Libro) {
-                contador++;
-            }
-        }
-        return contador;
+        return manejadorMaterial.obtenerTodosLosLibros().size();
     }
     
     @Override
     public int obtenerCantidadArtEspeciales() {
-        int contador = 0;
-        for (Material material : manejadorMaterial.getListaMateriales()) {
-            if (material instanceof ArtEspeciales) {
-                contador++;
-            }
-        }
-        return contador;
+        return manejadorMaterial.obtenerTodosLosArtEspeciales().size();
     }
     
     // ===== MÉTODOS DE CONSULTA DE DONACIONES =====

@@ -48,6 +48,15 @@ task crearTablas(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+// Configurar codificación UTF-8 para compilación
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
