@@ -49,11 +49,11 @@ public class PanelAdministrador extends JInternalFrame {
         initLayout();
         initEvents();
         
-        // Centrar en pantalla
-        setLocation(50, 50);
-        
         // Cargar datos iniciales
         cargarDatos();
+        
+        // Centrar en pantalla
+        setLocation(50, 50);
     }
     
     private void initComponents() {
@@ -257,11 +257,31 @@ public class PanelAdministrador extends JInternalFrame {
     }
     
     private void cargarDatos() {
-        // Cargar bibliotecarios para reportes
-        comboBibliotecarioReporte.removeAllItems();
-        List<Bibliotecario> bibliotecarios = controladorFachada.getListaBibliotecarios();
-        for (Bibliotecario bibliotecario : bibliotecarios) {
-            comboBibliotecarioReporte.addItem(bibliotecario);
+        try {
+            System.out.println("DEBUG: Iniciando carga de bibliotecarios para auditoría...");
+            
+            // Cargar bibliotecarios para reportes
+            comboBibliotecarioReporte.removeAllItems();
+            List<Bibliotecario> bibliotecarios = controladorFachada.getListaBibliotecarios();
+            
+            System.out.println("DEBUG: Bibliotecarios encontrados: " + bibliotecarios.size());
+            
+            for (Bibliotecario bibliotecario : bibliotecarios) {
+                System.out.println("DEBUG: Agregando bibliotecario: " + bibliotecario.getNombre() + " (Nro. " + bibliotecario.getNroEmpleado() + ")");
+                comboBibliotecarioReporte.addItem(bibliotecario);
+            }
+            
+            System.out.println("DEBUG: Carga de bibliotecarios completada. Total en combo: " + comboBibliotecarioReporte.getItemCount());
+            
+        } catch (Exception e) {
+            System.err.println("ERROR al cargar bibliotecarios: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Mostrar mensaje de error al usuario
+            JOptionPane.showMessageDialog(this, 
+                "❌ Error al cargar bibliotecarios para auditoría:\n" + e.getMessage(),
+                "Error de Carga", 
+                JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -307,9 +327,8 @@ public class PanelAdministrador extends JInternalFrame {
                 fila[1] = "Material ID: " + prestamo.getMaterial().getId();
             }
             
-            // Lector con información real completa
-            Lector lector = prestamo.getLector();
-            fila[2] = lector.getNombre() + " (Email: " + lector.getEmail() + ")";
+            // Lector con información básica (evitar LazyInitializationException)
+            fila[2] = "Lector ID: " + prestamo.getLector().getId();
             // Fecha real de solicitud del préstamo
             fila[3] = formatearFecha(prestamo.getFechaSolicitada());
             
@@ -389,4 +408,5 @@ public class PanelAdministrador extends JInternalFrame {
         }
         return String.format("%02d/%02d/%04d", fecha.getDia(), fecha.getMes(), fecha.getAnio());
     }
+    
 }

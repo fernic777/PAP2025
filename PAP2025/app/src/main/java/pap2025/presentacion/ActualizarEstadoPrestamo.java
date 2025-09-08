@@ -208,8 +208,8 @@ public class ActualizarEstadoPrestamo extends JInternalFrame {
                 fila[1] = "Material ID: " + prestamo.getMaterial().getId();
             }
             
-            fila[2] = prestamo.getLector().getNombre() + " (" + prestamo.getLector().getEmail() + ")";
-            fila[3] = prestamo.getBibliotecario().getNombre() + " (Nro. " + prestamo.getBibliotecario().getNroEmpleado() + ")";
+            fila[2] = "Lector ID: " + prestamo.getLector().getId();
+            fila[3] = "Bibliotecario ID: " + prestamo.getBibliotecario().getId();
             fila[4] = formatearFecha(prestamo.getFechaSolicitada());
             fila[5] = formatearFecha(prestamo.getFechaDevolucion());
             

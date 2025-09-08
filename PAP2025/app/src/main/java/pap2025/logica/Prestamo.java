@@ -120,15 +120,20 @@ public class Prestamo {
     
     @Override
     public String toString() {
-        return "Prestamo{" +
-                "id=" + id +
-                ", material=" + (material instanceof Libro ? ((Libro) material).getTitulo() : 
-                                 material instanceof ArtEspeciales ? ((ArtEspeciales) material).getDescripcion() : "Material") +
-                ", lector=" + lector.getNombre() +
-                ", bibliotecario=" + bibliotecario.getNombre() +
-                ", fechaSolicitada=" + fechaSolicitada +
-                ", fechaDevolucion=" + fechaDevolucion +
-                ", estadoP=" + estadoP +
-                '}';
+        try {
+            return "Prestamo{" +
+                    "id=" + id +
+                    ", material=" + (material instanceof Libro ? ((Libro) material).getTitulo() : 
+                                     material instanceof ArtEspeciales ? ((ArtEspeciales) material).getDescripcion() : "Material") +
+                    ", lector=" + (lector != null ? "Lector ID: " + lector.getId() : "null") +
+                    ", bibliotecario=" + (bibliotecario != null ? "Bibliotecario ID: " + bibliotecario.getId() : "null") +
+                    ", fechaSolicitada=" + fechaSolicitada +
+                    ", fechaDevolucion=" + fechaDevolucion +
+                    ", estadoP=" + estadoP +
+                    '}';
+        } catch (Exception e) {
+            // Si hay error de lazy loading, mostrar solo información básica
+            return "Prestamo{id=" + id + ", estadoP=" + estadoP + "}";
+        }
     }
 }

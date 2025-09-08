@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class VentanaPrincipal extends JFrame {
     
@@ -28,6 +29,7 @@ public class VentanaPrincipal extends JFrame {
         initComponents();
         initLayout();
         initMenu();
+        initEvents();
         
         // Hacer visible
         setVisible(true);
@@ -129,9 +131,27 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
+        JMenuItem menuItemEditarInformacionPrestamo = new JMenuItem("Editar Información de Préstamo");
+        menuItemEditarInformacionPrestamo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirEditarInformacionPrestamo();
+            }
+        });
+        
+        JMenuItem menuItemListarPrestamosPorLector = new JMenuItem("Listar Préstamos por Lector");
+        menuItemListarPrestamosPorLector.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirListarPrestamosPorLector();
+            }
+        });
+        
         menuPrestamos.add(menuItemGestionarPrestamos);
         menuPrestamos.addSeparator();
         menuPrestamos.add(menuItemActualizarEstadoPrestamo);
+        menuPrestamos.add(menuItemEditarInformacionPrestamo);
+        menuPrestamos.add(menuItemListarPrestamosPorLector);
         menuPrestamos.addSeparator();
         
         JMenuItem menuItemPanelAdmin = new JMenuItem("👑 Panel de Administrador");
@@ -143,10 +163,28 @@ public class VentanaPrincipal extends JFrame {
         });
         menuPrestamos.add(menuItemPanelAdmin);
         
+        // Menú Herramientas
+        JMenu menuHerramientas = new JMenu("Herramientas");
+        
+        JMenuItem menuItemCrearDatosPrueba = new JMenuItem("🧪 Crear Datos de Prueba");
+        menuItemCrearDatosPrueba.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                crearDatosPrueba();
+            }
+        });
+        
+        menuHerramientas.add(menuItemCrearDatosPrueba);
+        
         // Agregar menús a la barra
         menuBar.add(menuUsuarios);
         menuBar.add(menuMateriales);
         menuBar.add(menuPrestamos);
+        menuBar.add(menuHerramientas);
+    }
+    
+    private void initEvents() {
+        // Los eventos ahora se manejan directamente en los menús
     }
     
     private void abrirRegistrarLector() {
@@ -333,6 +371,52 @@ public class VentanaPrincipal extends JFrame {
         );
     }
     
+    private void abrirEditarInformacionPrestamo() {
+        // Verificar si ya hay una ventana abierta
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            if (frame instanceof EditarInformacionPrestamo) {
+                frame.toFront();
+                return;
+            }
+        }
+        
+        // Crear nueva ventana de edición de información de préstamo
+        EditarInformacionPrestamo editarInformacionPrestamo = new EditarInformacionPrestamo(controladorFachada);
+        desktopPane.add(editarInformacionPrestamo);
+        editarInformacionPrestamo.setVisible(true);
+        
+        // Centrar en el desktop pane
+        Dimension desktopSize = desktopPane.getSize();
+        Dimension frameSize = editarInformacionPrestamo.getSize();
+        editarInformacionPrestamo.setLocation(
+            (desktopSize.width - frameSize.width) / 2,
+            (desktopSize.height - frameSize.height) / 2
+        );
+    }
+    
+    private void abrirListarPrestamosPorLector() {
+        // Verificar si ya hay una ventana abierta
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            if (frame instanceof ListarPrestamosPorLector) {
+                frame.toFront();
+                return;
+            }
+        }
+        
+        // Crear nueva ventana de listado de préstamos por lector
+        ListarPrestamosPorLector listarPrestamosPorLector = new ListarPrestamosPorLector(controladorFachada);
+        desktopPane.add(listarPrestamosPorLector);
+        listarPrestamosPorLector.setVisible(true);
+        
+        // Centrar en el desktop pane
+        Dimension desktopSize = desktopPane.getSize();
+        Dimension frameSize = listarPrestamosPorLector.getSize();
+        listarPrestamosPorLector.setLocation(
+            (desktopSize.width - frameSize.width) / 2,
+            (desktopSize.height - frameSize.height) / 2
+        );
+    }
+    
     private void abrirPanelAdministrador() {
         // Verificar si ya hay una ventana abierta
         for (JInternalFrame frame : desktopPane.getAllFrames()) {
@@ -371,5 +455,165 @@ public class VentanaPrincipal extends JFrame {
                 new VentanaPrincipal();
             }
         });
+    }
+    
+    // ===== MÉTODO PARA CREAR DATOS DE PRUEBA =====
+    
+    private void crearDatosPrueba() {
+        int respuesta = JOptionPane.showConfirmDialog(this, 
+            "🧪 ¿Desea crear datos de prueba X-Men?\n\n" +
+            "Esto creará:\n" +
+            "• 3 lectores X-Men (Charles Xavier, Wolverine, Jean Grey)\n" +
+            "• 2 bibliotecarios X-Men (Storm, Cyclops)\n" +
+            "• 3 libros temáticos (Days of Future Past, Phoenix Saga, Wolverine: Origin)\n" +
+            "• 2 artículos especiales (Cerebro de Xavier, Gafas de Cyclops)\n" +
+            "• 6 préstamos con diferentes estados\n\n" +
+            "⚠️ Los datos existentes NO se eliminarán",
+            "Crear Datos X-Men", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (respuesta != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        try {
+            System.out.println("📚 Creando datos de prueba...");
+            
+            // Crear fechas de prueba
+            pap2025.datatypes.DTFecha fechaHoy = new pap2025.datatypes.DTFecha(15, 1, 2025);
+            pap2025.datatypes.DTFecha fechaAyer = new pap2025.datatypes.DTFecha(14, 1, 2025);
+            
+            // Crear lectores (personajes de X-Men)
+            controladorFachada.registrarLector("Charles Xavier", "profesor.x@xavier.edu", "1407 Graymalkin Lane, Salem Center", fechaHoy, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
+            controladorFachada.registrarLector("Logan (Wolverine)", "wolverine@xmen.com", "Canadian Wilderness, Alberta", fechaHoy, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
+            controladorFachada.registrarLector("Jean Grey", "jean.grey@xmen.com", "1407 Graymalkin Lane, Salem Center", fechaAyer, pap2025.logica.Zona.SUCURSAL_ESTE);
+            
+            // Crear bibliotecarios (personajes de X-Men)
+            controladorFachada.registrarBibliotecario("Ororo Munroe (Storm)", "storm@xmen.com", 1001);
+            controladorFachada.registrarBibliotecario("Scott Summers (Cyclops)", "cyclops@xmen.com", 1002);
+            
+            // Crear libros (temática X-Men)
+            controladorFachada.crearLibro(fechaHoy, "X-Men: Days of Future Past", 863);
+            controladorFachada.crearLibro(fechaHoy, "The Phoenix Saga", 471);
+            controladorFachada.crearLibro(fechaAyer, "Wolverine: Origin", 156);
+            
+            // Crear artículos especiales (temática X-Men)
+            pap2025.datatypes.DTDimensiones dim1 = new pap2025.datatypes.DTDimensiones(30.0, 20.0, 5.0);
+            pap2025.datatypes.DTDimensiones dim2 = new pap2025.datatypes.DTDimensiones(50.0, 30.0, 10.0);
+            controladorFachada.crearArtEspecial(fechaHoy, "Cerebro de Xavier (Réplica)", 0.5, dim1);
+            controladorFachada.crearArtEspecial(fechaAyer, "Gafas de Cyclops (Réplica)", 2.0, dim2);
+            
+            // Crear préstamos de prueba con diferentes estados
+            System.out.println("📋 Creando préstamos de prueba...");
+            
+            // Obtener materiales y usuarios para crear préstamos
+            List<pap2025.logica.Material> materiales = controladorFachada.getListaMateriales();
+            List<pap2025.logica.Lector> lectores = controladorFachada.getListaLectores();
+            List<pap2025.logica.Bibliotecario> bibliotecarios = controladorFachada.getListaBibliotecarios();
+            
+            if (!materiales.isEmpty() && !lectores.isEmpty() && !bibliotecarios.isEmpty()) {
+                // Crear fechas para préstamos
+                pap2025.datatypes.DTFecha fechaSolicitud = new pap2025.datatypes.DTFecha(31, 8, 2025);
+                pap2025.datatypes.DTFecha fechaDevolucion = new pap2025.datatypes.DTFecha(15, 9, 2025);
+                pap2025.datatypes.DTFecha fechaDevolucionPendiente = new pap2025.datatypes.DTFecha(30, 9, 2025);
+                
+                // Préstamo 1: EN CURSO
+                pap2025.logica.Material material1 = materiales.get(0); // X-Men: Days of Future Past
+                pap2025.logica.Lector lector1 = lectores.get(0); // Charles Xavier
+                pap2025.logica.Bibliotecario bibliotecario1 = bibliotecarios.get(0); // Ororo Munroe (Storm)
+                Integer prestamo1Id = controladorFachada.crearPrestamo(material1, lector1, bibliotecario1, fechaDevolucion);
+                if (prestamo1Id != null) {
+                    controladorFachada.actualizarEstadoPrestamo(prestamo1Id, pap2025.logica.EstadoP.ENCURSO);
+                    System.out.println("✅ Préstamo EN CURSO creado con ID: " + prestamo1Id);
+                }
+                
+                // Préstamo 2: PENDIENTE (mismo material que el anterior)
+                if (materiales.size() > 1) {
+                    pap2025.logica.Material material2 = materiales.get(1); // The Phoenix Saga
+                    pap2025.logica.Lector lector2 = lectores.get(1); // Logan (Wolverine)
+                    Integer prestamo2Id = controladorFachada.crearPrestamo(material2, lector2, bibliotecario1, fechaDevolucionPendiente);
+                    if (prestamo2Id != null) {
+                        controladorFachada.actualizarEstadoPrestamo(prestamo2Id, pap2025.logica.EstadoP.PENDIENTE);
+                        System.out.println("⏳ Préstamo PENDIENTE creado con ID: " + prestamo2Id);
+                    }
+                }
+                
+                // Préstamo 3: PENDIENTE (artículo especial)
+                if (materiales.size() > 3) {
+                    pap2025.logica.Material material3 = materiales.get(3); // Cerebro de Xavier (Réplica)
+                    pap2025.logica.Lector lector3 = lectores.get(2); // Jean Grey
+                    Integer prestamo3Id = controladorFachada.crearPrestamo(material3, lector3, bibliotecario1, fechaDevolucionPendiente);
+                    if (prestamo3Id != null) {
+                        controladorFachada.actualizarEstadoPrestamo(prestamo3Id, pap2025.logica.EstadoP.PENDIENTE);
+                        System.out.println("⏳ Préstamo PENDIENTE creado con ID: " + prestamo3Id);
+                    }
+                }
+                
+                // Préstamo 4: PENDIENTE (mismo material que el anterior para ver priorización)
+                if (materiales.size() > 3) {
+                    pap2025.logica.Material material4 = materiales.get(3); // Cerebro de Xavier (Réplica) (otra vez)
+                    pap2025.logica.Lector lector4 = lectores.get(0); // Charles Xavier
+                    Integer prestamo4Id = controladorFachada.crearPrestamo(material4, lector4, bibliotecario1, fechaDevolucionPendiente);
+                    if (prestamo4Id != null) {
+                        controladorFachada.actualizarEstadoPrestamo(prestamo4Id, pap2025.logica.EstadoP.PENDIENTE);
+                        System.out.println("⏳ Préstamo PENDIENTE creado con ID: " + prestamo4Id);
+                    }
+                }
+                
+                // Préstamo 5: PENDIENTE (artículo especial diferente)
+                if (materiales.size() > 4) {
+                    pap2025.logica.Material material5 = materiales.get(4); // Gafas de Cyclops (Réplica)
+                    pap2025.logica.Lector lector5 = lectores.get(1); // Logan (Wolverine)
+                    Integer prestamo5Id = controladorFachada.crearPrestamo(material5, lector5, bibliotecarios.get(1), fechaDevolucionPendiente);
+                    if (prestamo5Id != null) {
+                        controladorFachada.actualizarEstadoPrestamo(prestamo5Id, pap2025.logica.EstadoP.PENDIENTE);
+                        System.out.println("⏳ Préstamo PENDIENTE creado con ID: " + prestamo5Id);
+                    }
+                }
+                
+                // Préstamo 6: DEVUELTO (para completar la variedad)
+                if (materiales.size() > 2) {
+                    pap2025.logica.Material material6 = materiales.get(2); // Wolverine: Origin
+                    pap2025.logica.Lector lector6 = lectores.get(2); // Jean Grey
+                    Integer prestamo6Id = controladorFachada.crearPrestamo(material6, lector6, bibliotecarios.get(1), fechaDevolucion);
+                    if (prestamo6Id != null) {
+                        controladorFachada.actualizarEstadoPrestamo(prestamo6Id, pap2025.logica.EstadoP.DEVUELTO);
+                        System.out.println("✅ Préstamo DEVUELTO creado con ID: " + prestamo6Id);
+                    }
+                }
+            }
+            
+            System.out.println("✅ Datos de prueba creados exitosamente");
+            
+            // Mostrar resumen
+            JOptionPane.showMessageDialog(this, 
+                "✅ Datos de prueba X-Men creados exitosamente!\n\n" +
+                "📚 Se crearon 3 libros temáticos:\n" +
+                "   • X-Men: Days of Future Past\n" +
+                "   • The Phoenix Saga\n" +
+                "   • Wolverine: Origin\n\n" +
+                "🎨 Se crearon 2 artículos especiales:\n" +
+                "   • Cerebro de Xavier (Réplica)\n" +
+                "   • Gafas de Cyclops (Réplica)\n\n" +
+                "👤 Se crearon 3 lectores X-Men:\n" +
+                "   • Charles Xavier\n" +
+                "   • Logan (Wolverine)\n" +
+                "   • Jean Grey\n\n" +
+                "🏢 Se crearon 2 bibliotecarios X-Men:\n" +
+                "   • Ororo Munroe (Storm)\n" +
+                "   • Scott Summers (Cyclops)\n\n" +
+                "📋 Se crearon 6 préstamos con diferentes estados\n\n" +
+                "💡 Los datos están listos para usar en las diferentes funcionalidades del sistema.",
+                "Datos X-Men Creados", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            System.err.println("⚠️ Error al crear datos de prueba: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "❌ Error al crear datos de prueba:\n" + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

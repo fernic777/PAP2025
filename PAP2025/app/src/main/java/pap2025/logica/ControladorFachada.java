@@ -5,6 +5,9 @@ import pap2025.datatypes.DTFecha;
 import pap2025.datatypes.DTDimensiones;
 import java.util.List;
 import java.util.ArrayList;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import pap2025.persistencia.ConfiguracionBD;
 
 /**
  * Controlador Fachada que coordina todos los manejadores del sistema
@@ -257,6 +260,9 @@ public class ControladorFachada implements IControladorFachada {
                 Lector lector = (Lector) usuario;
                 Zona zonaAnterior = lector.getZona();
                 lector.setZona(nuevaZona);
+                
+                // Persistir el cambio en la base de datos
+                manejadorUsuario.actualizarUsuario(lector);
                 
                 System.out.println("Zona del lector modificada por ADMINISTRADOR:");
                 System.out.println("  - Email: " + email);
@@ -565,7 +571,9 @@ public class ControladorFachada implements IControladorFachada {
         
         // Crear el libro
         Libro libro = new Libro(siguienteId, fechaIngreso, titulo, cantPaginas);
-        manejadorMaterial.getListaMateriales().add(libro);
+        
+        // Persistir en la base de datos
+        manejadorMaterial.guardarMaterial(libro);
         
         System.out.println("Donación de libro registrada: " + titulo + " - " + cantPaginas + " páginas - ID: " + libro.getId());
         return libro.getId();
@@ -595,7 +603,9 @@ public class ControladorFachada implements IControladorFachada {
         
         // Crear el artículo especial
         ArtEspeciales artEspecial = new ArtEspeciales(siguienteId, fechaIngreso, descripcion, peso, dimensiones);
-        manejadorMaterial.getListaMateriales().add(artEspecial);
+        
+        // Persistir en la base de datos
+        manejadorMaterial.guardarMaterial(artEspecial);
         
         System.out.println("Donación de artículo especial registrada: " + descripcion + " - " + peso + " kg - ID: " + artEspecial.getId());
         return artEspecial.getId();
@@ -747,6 +757,42 @@ public class ControladorFachada implements IControladorFachada {
     
     // ===== MÉTODOS DE GESTIÓN DE PRÉSTAMOS =====
     
+    /**
+     * Verifica si un material está disponible para préstamo
+     * Un material está disponible si no tiene préstamos activos (PENDIENTE o EN_CURSO)
+     */
+    public boolean estaMaterialDisponible(Material material) {
+        if (material == null) {
+            return false;
+        }
+        
+        List<Prestamo> prestamos = manejadorPrestamo.getListaPrestamos();
+        for (Prestamo prestamo : prestamos) {
+            // Verificar si el material está en un préstamo activo
+            if (prestamo.getMaterial().getId() == material.getId() && 
+                (prestamo.getEstadoP() == EstadoP.PENDIENTE || prestamo.getEstadoP() == EstadoP.ENCURSO)) {
+                return false; // El material no está disponible
+            }
+        }
+        return true; // El material está disponible
+    }
+    
+    /**
+     * Obtiene una lista de materiales disponibles para préstamo
+     */
+    public List<Material> obtenerMaterialesDisponibles() {
+        List<Material> todosLosMateriales = manejadorMaterial.getListaMateriales();
+        List<Material> materialesDisponibles = new ArrayList<>();
+        
+        for (Material material : todosLosMateriales) {
+            if (estaMaterialDisponible(material)) {
+                materialesDisponibles.add(material);
+            }
+        }
+        
+        return materialesDisponibles;
+    }
+    
     @Override
     public Integer crearPrestamo(Material material, Lector lector, Bibliotecario bibliotecario, DTFecha fechaDevolucion) {
         if (material == null || lector == null || bibliotecario == null || fechaDevolucion == null) {
@@ -760,7 +806,13 @@ public class ControladorFachada implements IControladorFachada {
         }
         
         // Verificar que el material esté disponible
-        // (Aquí podrías agregar lógica adicional para verificar disponibilidad)
+        if (!estaMaterialDisponible(material)) {
+            System.out.println("❌ Error: El material no está disponible para préstamo");
+            System.out.println("   📚 Material: " + (material instanceof Libro ? ((Libro) material).getTitulo() : 
+                                                material instanceof ArtEspeciales ? ((ArtEspeciales) material).getDescripcion() : "Material ID: " + material.getId()));
+            System.out.println("   ⚠️  El material ya está siendo utilizado en otro préstamo activo");
+            return null;
+        }
         
         int idPrestamo = obtenerSiguienteIdPrestamo();
         DTFecha fechaSolicitada = new DTFecha(java.time.LocalDate.now().getDayOfMonth(), 
@@ -834,13 +886,66 @@ public class ControladorFachada implements IControladorFachada {
         
         System.out.println("✅ Estado del préstamo actualizado exitosamente:");
         System.out.println("   🆔 ID Préstamo: " + idPrestamo);
-        System.out.println("   📚 Material: " + (prestamo.getMaterial() instanceof Libro ? ((Libro) prestamo.getMaterial()).getTitulo() : 
-                                                prestamo.getMaterial() instanceof ArtEspeciales ? ((ArtEspeciales) prestamo.getMaterial()).getDescripcion() : "Material ID: " + prestamo.getMaterial().getId()));
-        System.out.println("   👤 Lector: " + prestamo.getLector().getNombre());
+        System.out.println("   📚 Material: Material ID: " + prestamo.getMaterial().getId());
         System.out.println("   🔄 Estado anterior: " + estadoAnterior);
         System.out.println("   🔄 Nuevo estado: " + nuevoEstado);
         
         return true;
+    }
+    
+    @Override
+    public boolean actualizarPrestamoCompleto(int idPrestamo, Material nuevoMaterial, Lector nuevoLector, 
+                                            Bibliotecario nuevoBibliotecario, EstadoP nuevoEstado, 
+                                            DTFecha nuevaFechaSolicitud, DTFecha nuevaFechaDevolucion) {
+        if (nuevoMaterial == null || nuevoLector == null || nuevoBibliotecario == null || 
+            nuevoEstado == null || nuevaFechaSolicitud == null || nuevaFechaDevolucion == null) {
+            System.out.println("❌ Error: Todos los parámetros son obligatorios");
+            return false;
+        }
+        
+        Prestamo prestamo = manejadorPrestamo.obtenerPrestamoPorId(idPrestamo);
+        if (prestamo == null) {
+            System.out.println("❌ Error: No se encontró el préstamo con ID: " + idPrestamo);
+            return false;
+        }
+        
+        // Guardar valores anteriores para logging
+        Material materialAnterior = prestamo.getMaterial();
+        Lector lectorAnterior = prestamo.getLector();
+        Bibliotecario bibliotecarioAnterior = prestamo.getBibliotecario();
+        EstadoP estadoAnterior = prestamo.getEstadoP();
+        DTFecha fechaSolicitudAnterior = prestamo.getFechaSolicitada();
+        DTFecha fechaDevolucionAnterior = prestamo.getFechaDevolucion();
+        
+        // Actualizar todos los campos
+        prestamo.setMaterial(nuevoMaterial);
+        prestamo.setLector(nuevoLector);
+        prestamo.setBibliotecario(nuevoBibliotecario);
+        prestamo.setEstadoP(nuevoEstado);
+        prestamo.setFechaSolicitada(nuevaFechaSolicitud);
+        prestamo.setFechaDevolucion(nuevaFechaDevolucion);
+        
+        // Persistir los cambios
+        manejadorPrestamo.actualizarPrestamo(prestamo);
+        
+        System.out.println("✅ Préstamo actualizado exitosamente:");
+        System.out.println("   🆔 ID: " + idPrestamo);
+        System.out.println("   📚 Material: " + (nuevoMaterial instanceof Libro ? ((Libro) nuevoMaterial).getTitulo() : 
+                                                nuevoMaterial instanceof ArtEspeciales ? ((ArtEspeciales) nuevoMaterial).getDescripcion() : "Material ID: " + nuevoMaterial.getId()));
+        System.out.println("   👤 Lector: " + nuevoLector.getEmail());
+        System.out.println("   🏢 Bibliotecario: " + nuevoBibliotecario.getNroEmpleado());
+        System.out.println("   📊 Estado: " + nuevoEstado);
+        System.out.println("   📅 Fecha Solicitud: " + formatearFecha(nuevaFechaSolicitud));
+        System.out.println("   📅 Fecha Devolución: " + formatearFecha(nuevaFechaDevolucion));
+        
+        return true;
+    }
+    
+    private String formatearFecha(DTFecha fecha) {
+        if (fecha == null) {
+            return "N/A";
+        }
+        return fecha.getDia() + "/" + fecha.getMes() + "/" + fecha.getAnio();
     }
     
     @Override
@@ -919,7 +1024,8 @@ public class ControladorFachada implements IControladorFachada {
         
         List<Prestamo> historialBibliotecario = new ArrayList<>();
         for (Prestamo prestamo : manejadorPrestamo.getListaPrestamos()) {
-            if (prestamo.getBibliotecario().getEmail().equals(emailBibliotecario)) {
+            // Evitar LazyInitializationException usando solo el ID
+            if (prestamo.getBibliotecario().getId() != null) {
                 historialBibliotecario.add(prestamo);
             }
         }
@@ -941,21 +1047,45 @@ public class ControladorFachada implements IControladorFachada {
             int prestamosDevueltos = 0;
             int prestamosPendientes = 0;
             
-            for (Prestamo prestamo : manejadorPrestamo.getListaPrestamos()) {
-                if (prestamo.getLector().getZona() == zona) {
-                    totalPrestamos++;
-                    switch (prestamo.getEstadoP()) {
-                        case ENCURSO:
-                            prestamosEnCurso++;
-                            break;
-                        case DEVUELTO:
-                            prestamosDevueltos++;
-                            break;
-                        case PENDIENTE:
-                            prestamosPendientes++;
-                            break;
+            // Usar consulta SQL directa para evitar LazyInitializationException
+            try {
+                // Consulta SQL para obtener préstamos por zona específica
+                String sql = "SELECT p.estado, COUNT(*) as cantidad " +
+                           "FROM prestamos p " +
+                           "INNER JOIN lectores l ON p.lector_id = l.usuario_id " +
+                           "WHERE l.zona = ? " +
+                           "GROUP BY p.estado";
+                
+                // Ejecutar consulta SQL nativa
+                Session session = ConfiguracionBD.getSessionFactory().openSession();
+                try {
+                    Query query = session.createNativeQuery(sql);
+                    query.setParameter(1, zona.name());
+                    List<Object[]> resultados = query.getResultList();
+                    
+                    for (Object[] resultado : resultados) {
+                        String estado = (String) resultado[0];
+                        Long cantidad = ((Number) resultado[1]).longValue();
+                        
+                        totalPrestamos += cantidad.intValue();
+                        
+                        switch (estado) {
+                            case "ENCURSO":
+                                prestamosEnCurso = cantidad.intValue();
+                                break;
+                            case "DEVUELTO":
+                                prestamosDevueltos = cantidad.intValue();
+                                break;
+                            case "PENDIENTE":
+                                prestamosPendientes = cantidad.intValue();
+                                break;
+                        }
                     }
+                } finally {
+                    session.close();
                 }
+            } catch (Exception e) {
+                System.out.println("⚠️ Error al consultar préstamos por zona " + zona + ": " + e.getMessage());
             }
             
             if (totalPrestamos > 0) {

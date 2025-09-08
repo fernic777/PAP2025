@@ -205,7 +205,7 @@ public class GestionarPrestamos extends JInternalFrame {
                 cargarDatos();
                 JOptionPane.showMessageDialog(GestionarPrestamos.this, 
                     "✅ Datos actualizados correctamente!\n\n" +
-                    "📚 Materiales: " + comboMaterial.getItemCount() + "\n" +
+                    "📚 Materiales disponibles: " + comboMaterial.getItemCount() + "\n" +
                     "👤 Lectores activos: " + comboLector.getItemCount() + "\n" +
                     "🏢 Bibliotecarios: " + comboBibliotecario.getItemCount(),
                     "Datos Actualizados", 
@@ -302,13 +302,13 @@ public class GestionarPrestamos extends JInternalFrame {
     private void cargarDatos() {
         System.out.println("DEBUG: Iniciando carga de datos...");
         
-        // Cargar materiales
+        // Cargar materiales disponibles
         comboMaterial.removeAllItems();
-        List<Material> materiales = controladorFachada.getListaMateriales();
-        System.out.println("DEBUG: Materiales encontrados: " + materiales.size());
-        for (Material material : materiales) {
+        List<Material> materialesDisponibles = controladorFachada.obtenerMaterialesDisponibles();
+        System.out.println("DEBUG: Materiales disponibles encontrados: " + materialesDisponibles.size());
+        for (Material material : materialesDisponibles) {
             comboMaterial.addItem(material);
-            System.out.println("DEBUG: Agregado material: " + material.getId() + " - " + 
+            System.out.println("DEBUG: Agregado material disponible: " + material.getId() + " - " + 
                              (material instanceof Libro ? ((Libro) material).getTitulo() : 
                               material instanceof ArtEspeciales ? ((ArtEspeciales) material).getDescripcion() : "Material"));
         }
@@ -356,8 +356,8 @@ public class GestionarPrestamos extends JInternalFrame {
                 fila[1] = "Material ID: " + prestamo.getMaterial().getId();
             }
             
-            fila[2] = prestamo.getLector().getNombre() + " (" + prestamo.getLector().getEmail() + ")";
-            fila[3] = prestamo.getBibliotecario().getNombre() + " (Nro. " + prestamo.getBibliotecario().getNroEmpleado() + ")";
+            fila[2] = "Lector ID: " + prestamo.getLector().getId();
+            fila[3] = "Bibliotecario ID: " + prestamo.getBibliotecario().getId();
             fila[4] = formatearFecha(prestamo.getFechaSolicitada());
             fila[5] = formatearFecha(prestamo.getFechaDevolucion());
             
@@ -417,8 +417,8 @@ public class GestionarPrestamos extends JInternalFrame {
                 "🆔 ID del Préstamo: " + idPrestamo + "\n" +
                 "📚 Material: " + (material instanceof Libro ? ((Libro) material).getTitulo() : 
                                    material instanceof ArtEspeciales ? ((ArtEspeciales) material).getDescripcion() : "Material ID: " + material.getId()) + "\n" +
-                "👤 Lector: " + lector.getNombre() + "\n" +
-                "🏢 Bibliotecario: " + bibliotecario.getNombre() + "\n" +
+                "👤 Lector: " + lector.getEmail() + "\n" +
+                "🏢 Bibliotecario: " + bibliotecario.getNroEmpleado() + "\n" +
                 "📅 Fecha Devolución: " + txtFechaDevolucion.getText(),
                 "Préstamo Creado", 
                 JOptionPane.INFORMATION_MESSAGE);

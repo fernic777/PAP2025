@@ -414,6 +414,10 @@ public class ConsultarDonaciones extends JInternalFrame {
         
         // Separar materiales por tipo y agregar a sus respectivas tablas
         for (Material material : donaciones) {
+            // Verificar si el material está disponible para préstamo
+            boolean estaDisponible = controladorFachada.estaMaterialDisponible(material);
+            String estadoDisponibilidad = estaDisponible ? "✅ Disponible" : "❌ En Préstamo";
+            
             if (material instanceof Libro) {
                 Libro libro = (Libro) material;
                 Object[] filaLibro = new Object[5];
@@ -421,10 +425,10 @@ public class ConsultarDonaciones extends JInternalFrame {
                 filaLibro[1] = libro.getTitulo();
                 filaLibro[2] = libro.getCantPaginas();
                 filaLibro[3] = formatearFecha(libro.getFechaIngreso());
-                filaLibro[4] = "✅ Disponible";
+                filaLibro[4] = estadoDisponibilidad;
                 modeloLibros.addRow(filaLibro);
                 contadorLibros++;
-                System.out.println("DEBUG: Agregado libro: " + libro.getTitulo() + " (ID: " + libro.getId() + ")");
+                System.out.println("DEBUG: Agregado libro: " + libro.getTitulo() + " (ID: " + libro.getId() + ") - Estado: " + estadoDisponibilidad);
             } else if (material instanceof ArtEspeciales) {
                 ArtEspeciales artEspecial = (ArtEspeciales) material;
                 Object[] filaArtEspecial = new Object[8];
@@ -435,10 +439,10 @@ public class ConsultarDonaciones extends JInternalFrame {
                 filaArtEspecial[4] = String.format("%.1f", artEspecial.getDimensiones().getAncho());
                 filaArtEspecial[5] = String.format("%.1f", artEspecial.getDimensiones().getProfundidad());
                 filaArtEspecial[6] = formatearFecha(artEspecial.getFechaIngreso());
-                filaArtEspecial[7] = "✅ Disponible";
+                filaArtEspecial[7] = estadoDisponibilidad;
                 modeloArtEspeciales.addRow(filaArtEspecial);
                 contadorArtEspeciales++;
-                System.out.println("DEBUG: Agregado artículo especial: " + artEspecial.getDescripcion() + " (ID: " + artEspecial.getId() + ")");
+                System.out.println("DEBUG: Agregado artículo especial: " + artEspecial.getDescripcion() + " (ID: " + artEspecial.getId() + ") - Estado: " + estadoDisponibilidad);
             }
         }
         

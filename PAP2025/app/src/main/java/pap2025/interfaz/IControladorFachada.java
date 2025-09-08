@@ -325,6 +325,34 @@ public interface IControladorFachada {
      */
     public List<Material> getListaMateriales();
     
+    /**
+     * Obtiene la lista de materiales disponibles para préstamo
+     * @return Lista de materiales disponibles (no están en préstamos activos)
+     */
+    public List<Material> obtenerMaterialesDisponibles();
+    
+    /**
+     * Verifica si un material está disponible para préstamo
+     * @param material Material a verificar
+     * @return true si está disponible, false si está en préstamo activo
+     */
+    public boolean estaMaterialDisponible(Material material);
+    
+    /**
+     * Actualiza completamente un préstamo con todos sus campos
+     * @param idPrestamo ID del préstamo a actualizar
+     * @param nuevoMaterial Nuevo material
+     * @param nuevoLector Nuevo lector
+     * @param nuevoBibliotecario Nuevo bibliotecario
+     * @param nuevoEstado Nuevo estado
+     * @param nuevaFechaSolicitud Nueva fecha de solicitud
+     * @param nuevaFechaDevolucion Nueva fecha de devolución
+     * @return true si se actualizó correctamente, false en caso contrario
+     */
+    public boolean actualizarPrestamoCompleto(int idPrestamo, Material nuevoMaterial, Lector nuevoLector, 
+                                            Bibliotecario nuevoBibliotecario, EstadoP nuevoEstado, 
+                                            DTFecha nuevaFechaSolicitud, DTFecha nuevaFechaDevolucion);
+    
     // ===== MÉTODOS DE GESTIÓN DE DONACIONES =====
     
     /**
