@@ -20,10 +20,13 @@ public class VentanaPrincipal extends JFrame {
         this.controladorFachada = Fabrica.getInstancia().getIControladorFachada();
         
         // Configuración de la ventana principal
-        setTitle("Biblioteca Comunitaria - Lectores.uy");
+        setTitle("🦸‍♂️ Biblioteca Comunitaria Marvel - Lectores.uy 🦸‍♀️");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        // Aplicar tema Marvel
+        getContentPane().setBackground(new Color(15, 15, 35)); // Azul oscuro Marvel
         
         // Inicializar componentes
         initComponents();
@@ -33,11 +36,17 @@ public class VentanaPrincipal extends JFrame {
         
         // Hacer visible
         setVisible(true);
+        
+        // Mostrar mensaje de bienvenida Marvel
+        mostrarBienvenidaMarvel();
     }
     
     private void initComponents() {
         desktopPane = new JDesktopPane();
+        desktopPane.setBackground(new Color(15, 15, 35)); // Azul oscuro Marvel
         menuBar = new JMenuBar();
+        menuBar.setBackground(new Color(25, 25, 50)); // Azul más claro para el menú
+        menuBar.setForeground(new Color(255, 255, 255)); // Texto blanco
     }
     
     private void initLayout() {
@@ -48,7 +57,8 @@ public class VentanaPrincipal extends JFrame {
     
     private void initMenu() {
         // Menú Usuarios
-        JMenu menuUsuarios = new JMenu("Usuarios");
+        JMenu menuUsuarios = new JMenu("👥 Usuarios");
+        menuUsuarios.setForeground(new Color(255, 255, 255)); // Texto blanco
         
         JMenuItem menuItemRegistrarLector = new JMenuItem("Registrar Nuevo Lector");
         menuItemRegistrarLector.addActionListener(new ActionListener() {
@@ -90,7 +100,8 @@ public class VentanaPrincipal extends JFrame {
         menuUsuarios.add(menuItemRegistrarBibliotecario);
         
         // Menú Materiales
-        JMenu menuMateriales = new JMenu("Materiales");
+        JMenu menuMateriales = new JMenu("📚 Materiales");
+        menuMateriales.setForeground(new Color(255, 255, 255)); // Texto blanco
         
         JMenuItem menuItemRegistrarDonacion = new JMenuItem("Registrar Nueva Donación");
         menuItemRegistrarDonacion.addActionListener(new ActionListener() {
@@ -113,7 +124,8 @@ public class VentanaPrincipal extends JFrame {
         menuMateriales.add(menuItemConsultarDonaciones);
         
         // Menú Préstamos
-        JMenu menuPrestamos = new JMenu("Préstamos");
+        JMenu menuPrestamos = new JMenu("📋 Préstamos");
+        menuPrestamos.setForeground(new Color(255, 255, 255)); // Texto blanco
         
         JMenuItem menuItemGestionarPrestamos = new JMenuItem("Gestionar Préstamos");
         menuItemGestionarPrestamos.addActionListener(new ActionListener() {
@@ -164,7 +176,8 @@ public class VentanaPrincipal extends JFrame {
         menuPrestamos.add(menuItemPanelAdmin);
         
         // Menú Herramientas
-        JMenu menuHerramientas = new JMenu("Herramientas");
+        JMenu menuHerramientas = new JMenu("🔧 Herramientas");
+        menuHerramientas.setForeground(new Color(255, 255, 255)); // Texto blanco
         
         JMenuItem menuItemCrearDatosPrueba = new JMenuItem("🧪 Crear Datos de Prueba");
         menuItemCrearDatosPrueba.addActionListener(new ActionListener() {
@@ -457,19 +470,75 @@ public class VentanaPrincipal extends JFrame {
         });
     }
     
+    // ===== MÉTODO DE BIENVENIDA MARVEL =====
+    
+    private void mostrarBienvenidaMarvel() {
+        // Crear un diálogo personalizado con tema Marvel
+        JDialog bienvenidaDialog = new JDialog(this, "¡Bienvenido!", true);
+        bienvenidaDialog.setSize(500, 400);
+        bienvenidaDialog.setLocationRelativeTo(this);
+        bienvenidaDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        // Panel principal con fondo personalizado Marvel
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        panelPrincipal.setBackground(new Color(15, 15, 35)); // Fondo azul oscuro Marvel
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Título principal
+        JLabel titulo = new JLabel("🦸‍♂️ ¡BIENVENIDO A LA BIBLIOTECA COMUNITARIA MARVEL! 🦸‍♀️", JLabel.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 18));
+        titulo.setForeground(new Color(255, 69, 0)); // Rojo Marvel
+        titulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        
+        // Mensaje de bienvenida
+        JTextArea mensaje = new JTextArea();
+        mensaje.setText("¡Solicita y disfruta de tus libros favoritos!");
+        mensaje.setFont(new Font("Arial", Font.PLAIN, 12));
+        mensaje.setForeground(new Color(255, 255, 255)); // Blanco
+        mensaje.setBackground(new Color(15, 15, 35)); // Azul oscuro Marvel
+        mensaje.setEditable(false);
+        mensaje.setOpaque(true);
+        mensaje.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        // Botón de cerrar
+        JButton btnCerrar = new JButton("🚀 ¡Comenzar Aventura!");
+        btnCerrar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnCerrar.setBackground(new Color(255, 69, 0)); // Rojo Marvel
+        btnCerrar.setForeground(new Color(255, 255, 255)); // Blanco
+        btnCerrar.setFocusPainted(false);
+        btnCerrar.setBorder(BorderFactory.createRaisedBevelBorder());
+        btnCerrar.addActionListener(e -> bienvenidaDialog.dispose());
+        
+        // Panel de botón
+        JPanel panelBoton = new JPanel(new FlowLayout());
+        panelBoton.setBackground(new Color(15, 15, 35)); // Azul oscuro Marvel
+        panelBoton.add(btnCerrar);
+        
+        // Agregar componentes al panel principal
+        panelPrincipal.add(titulo, BorderLayout.NORTH);
+        panelPrincipal.add(new JScrollPane(mensaje), BorderLayout.CENTER);
+        panelPrincipal.add(panelBoton, BorderLayout.SOUTH);
+        
+        // Agregar panel al diálogo
+        bienvenidaDialog.add(panelPrincipal);
+        
+        // Mostrar diálogo
+        bienvenidaDialog.setVisible(true);
+    }
+    
     // ===== MÉTODO PARA CREAR DATOS DE PRUEBA =====
     
     private void crearDatosPrueba() {
         int respuesta = JOptionPane.showConfirmDialog(this, 
-            "🧪 ¿Desea crear datos de prueba X-Men?\n\n" +
+            "🧪 ¿Desea crear datos de prueba Marvel?\n\n" +
             "Esto creará:\n" +
-            "• 3 lectores X-Men (Charles Xavier, Wolverine, Jean Grey)\n" +
-            "• 2 bibliotecarios X-Men (Storm, Cyclops)\n" +
-            "• 3 libros temáticos (Days of Future Past, Phoenix Saga, Wolverine: Origin)\n" +
-            "• 2 artículos especiales (Cerebro de Xavier, Gafas de Cyclops)\n" +
+            "• 5 lectores Marvel (Spider-Man, Iron Man, Captain America, Black Widow, Thor)\n" +
+            "• 3 bibliotecarios Marvel (Nick Fury, Pepper Potts, Maria Hill)\n" +
+            "• 5 libros temáticos (Spider-Man, Iron Man, Captain America, Thor, Black Widow)\n" +
+            "• 4 artículos especiales (Máscara Spider-Man, Reactor Arc, Escudo Cap, Mjolnir)\n" +
             "• 6 préstamos con diferentes estados\n\n" +
             "⚠️ Los datos existentes NO se eliminarán",
-            "Crear Datos X-Men", 
+            "Crear Datos Marvel", 
             JOptionPane.YES_NO_OPTION, 
             JOptionPane.QUESTION_MESSAGE);
         
@@ -484,25 +553,33 @@ public class VentanaPrincipal extends JFrame {
             pap2025.datatypes.DTFecha fechaHoy = new pap2025.datatypes.DTFecha(15, 1, 2025);
             pap2025.datatypes.DTFecha fechaAyer = new pap2025.datatypes.DTFecha(14, 1, 2025);
             
-            // Crear lectores (personajes de X-Men)
-            controladorFachada.registrarLector("Charles Xavier", "profesor.x@xavier.edu", "1407 Graymalkin Lane, Salem Center", fechaHoy, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
-            controladorFachada.registrarLector("Logan (Wolverine)", "wolverine@xmen.com", "Canadian Wilderness, Alberta", fechaHoy, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
-            controladorFachada.registrarLector("Jean Grey", "jean.grey@xmen.com", "1407 Graymalkin Lane, Salem Center", fechaAyer, pap2025.logica.Zona.SUCURSAL_ESTE);
+            // Crear lectores (personajes de Marvel)
+            controladorFachada.registrarLector("Peter Parker (Spider-Man)", "spiderman@marvel.com", "20 Ingram Street, Queens, NYC", fechaHoy, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
+            controladorFachada.registrarLector("Tony Stark (Iron Man)", "ironman@starkindustries.com", "10880 Malibu Point, Malibu, CA", fechaHoy, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
+            controladorFachada.registrarLector("Steve Rogers (Captain America)", "captain.america@avengers.com", "569 Leaman Place, Brooklyn, NYC", fechaAyer, pap2025.logica.Zona.SUCURSAL_ESTE);
+            controladorFachada.registrarLector("Natasha Romanoff (Black Widow)", "blackwidow@shield.gov", "Classified Location", fechaHoy, pap2025.logica.Zona.SUCURSAL_OESTE);
+            controladorFachada.registrarLector("Thor Odinson", "thor@asgard.com", "Asgard, Nine Realms", fechaAyer, pap2025.logica.Zona.BIBLOTECA_CENTRAL);
             
-            // Crear bibliotecarios (personajes de X-Men)
-            controladorFachada.registrarBibliotecario("Ororo Munroe (Storm)", "storm@xmen.com", 1001);
-            controladorFachada.registrarBibliotecario("Scott Summers (Cyclops)", "cyclops@xmen.com", 1002);
+            // Crear bibliotecarios (personajes de Marvel)
+            controladorFachada.registrarBibliotecario("Nick Fury", "nick.fury@shield.gov", 1001);
+            controladorFachada.registrarBibliotecario("Pepper Potts", "pepper@starkindustries.com", 1002);
+            controladorFachada.registrarBibliotecario("Maria Hill", "maria.hill@shield.gov", 1003);
             
-            // Crear libros (temática X-Men)
-            controladorFachada.crearLibro(fechaHoy, "X-Men: Days of Future Past", 863);
-            controladorFachada.crearLibro(fechaHoy, "The Phoenix Saga", 471);
-            controladorFachada.crearLibro(fechaAyer, "Wolverine: Origin", 156);
+            // Crear libros (temática Marvel)
+            controladorFachada.crearLibro(fechaHoy, "The Amazing Spider-Man: The Complete Collection", 863);
+            controladorFachada.crearLibro(fechaHoy, "Iron Man: Armor Wars", 471);
+            controladorFachada.crearLibro(fechaAyer, "Captain America: The Winter Soldier", 156);
+            controladorFachada.crearLibro(fechaHoy, "Thor: God of Thunder", 320);
+            controladorFachada.crearLibro(fechaAyer, "Black Widow: Red Room Files", 280);
             
-            // Crear artículos especiales (temática X-Men)
+            // Crear artículos especiales (temática Marvel)
             pap2025.datatypes.DTDimensiones dim1 = new pap2025.datatypes.DTDimensiones(30.0, 20.0, 5.0);
             pap2025.datatypes.DTDimensiones dim2 = new pap2025.datatypes.DTDimensiones(50.0, 30.0, 10.0);
-            controladorFachada.crearArtEspecial(fechaHoy, "Cerebro de Xavier (Réplica)", 0.5, dim1);
-            controladorFachada.crearArtEspecial(fechaAyer, "Gafas de Cyclops (Réplica)", 2.0, dim2);
+            pap2025.datatypes.DTDimensiones dim3 = new pap2025.datatypes.DTDimensiones(25.0, 15.0, 8.0);
+            controladorFachada.crearArtEspecial(fechaHoy, "Máscara de Spider-Man (Réplica)", 0.5, dim1);
+            controladorFachada.crearArtEspecial(fechaAyer, "Reactor Arc de Iron Man (Réplica)", 2.0, dim2);
+            controladorFachada.crearArtEspecial(fechaHoy, "Escudo de Captain America (Réplica)", 1.5, dim3);
+            controladorFachada.crearArtEspecial(fechaAyer, "Martillo de Thor Mjolnir (Réplica)", 3.0, dim2);
             
             // Crear préstamos de prueba con diferentes estados
             System.out.println("📋 Creando préstamos de prueba...");
@@ -519,9 +596,9 @@ public class VentanaPrincipal extends JFrame {
                 pap2025.datatypes.DTFecha fechaDevolucionPendiente = new pap2025.datatypes.DTFecha(30, 9, 2025);
                 
                 // Préstamo 1: EN CURSO
-                pap2025.logica.Material material1 = materiales.get(0); // X-Men: Days of Future Past
-                pap2025.logica.Lector lector1 = lectores.get(0); // Charles Xavier
-                pap2025.logica.Bibliotecario bibliotecario1 = bibliotecarios.get(0); // Ororo Munroe (Storm)
+                pap2025.logica.Material material1 = materiales.get(0); // The Amazing Spider-Man: The Complete Collection
+                pap2025.logica.Lector lector1 = lectores.get(0); // Peter Parker (Spider-Man)
+                pap2025.logica.Bibliotecario bibliotecario1 = bibliotecarios.get(0); // Nick Fury
                 Integer prestamo1Id = controladorFachada.crearPrestamo(material1, lector1, bibliotecario1, fechaDevolucion);
                 if (prestamo1Id != null) {
                     controladorFachada.actualizarEstadoPrestamo(prestamo1Id, pap2025.logica.EstadoP.ENCURSO);
@@ -530,8 +607,8 @@ public class VentanaPrincipal extends JFrame {
                 
                 // Préstamo 2: PENDIENTE (mismo material que el anterior)
                 if (materiales.size() > 1) {
-                    pap2025.logica.Material material2 = materiales.get(1); // The Phoenix Saga
-                    pap2025.logica.Lector lector2 = lectores.get(1); // Logan (Wolverine)
+                    pap2025.logica.Material material2 = materiales.get(1); // Iron Man: Armor Wars
+                    pap2025.logica.Lector lector2 = lectores.get(1); // Tony Stark (Iron Man)
                     Integer prestamo2Id = controladorFachada.crearPrestamo(material2, lector2, bibliotecario1, fechaDevolucionPendiente);
                     if (prestamo2Id != null) {
                         controladorFachada.actualizarEstadoPrestamo(prestamo2Id, pap2025.logica.EstadoP.PENDIENTE);
@@ -541,8 +618,8 @@ public class VentanaPrincipal extends JFrame {
                 
                 // Préstamo 3: PENDIENTE (artículo especial)
                 if (materiales.size() > 3) {
-                    pap2025.logica.Material material3 = materiales.get(3); // Cerebro de Xavier (Réplica)
-                    pap2025.logica.Lector lector3 = lectores.get(2); // Jean Grey
+                    pap2025.logica.Material material3 = materiales.get(3); // Máscara de Spider-Man (Réplica)
+                    pap2025.logica.Lector lector3 = lectores.get(2); // Steve Rogers (Captain America)
                     Integer prestamo3Id = controladorFachada.crearPrestamo(material3, lector3, bibliotecario1, fechaDevolucionPendiente);
                     if (prestamo3Id != null) {
                         controladorFachada.actualizarEstadoPrestamo(prestamo3Id, pap2025.logica.EstadoP.PENDIENTE);
@@ -552,8 +629,8 @@ public class VentanaPrincipal extends JFrame {
                 
                 // Préstamo 4: PENDIENTE (mismo material que el anterior para ver priorización)
                 if (materiales.size() > 3) {
-                    pap2025.logica.Material material4 = materiales.get(3); // Cerebro de Xavier (Réplica) (otra vez)
-                    pap2025.logica.Lector lector4 = lectores.get(0); // Charles Xavier
+                    pap2025.logica.Material material4 = materiales.get(3); // Máscara de Spider-Man (Réplica) (otra vez)
+                    pap2025.logica.Lector lector4 = lectores.get(0); // Peter Parker (Spider-Man)
                     Integer prestamo4Id = controladorFachada.crearPrestamo(material4, lector4, bibliotecario1, fechaDevolucionPendiente);
                     if (prestamo4Id != null) {
                         controladorFachada.actualizarEstadoPrestamo(prestamo4Id, pap2025.logica.EstadoP.PENDIENTE);
@@ -563,8 +640,8 @@ public class VentanaPrincipal extends JFrame {
                 
                 // Préstamo 5: PENDIENTE (artículo especial diferente)
                 if (materiales.size() > 4) {
-                    pap2025.logica.Material material5 = materiales.get(4); // Gafas de Cyclops (Réplica)
-                    pap2025.logica.Lector lector5 = lectores.get(1); // Logan (Wolverine)
+                    pap2025.logica.Material material5 = materiales.get(4); // Reactor Arc de Iron Man (Réplica)
+                    pap2025.logica.Lector lector5 = lectores.get(1); // Tony Stark (Iron Man)
                     Integer prestamo5Id = controladorFachada.crearPrestamo(material5, lector5, bibliotecarios.get(1), fechaDevolucionPendiente);
                     if (prestamo5Id != null) {
                         controladorFachada.actualizarEstadoPrestamo(prestamo5Id, pap2025.logica.EstadoP.PENDIENTE);
@@ -574,8 +651,8 @@ public class VentanaPrincipal extends JFrame {
                 
                 // Préstamo 6: DEVUELTO (para completar la variedad)
                 if (materiales.size() > 2) {
-                    pap2025.logica.Material material6 = materiales.get(2); // Wolverine: Origin
-                    pap2025.logica.Lector lector6 = lectores.get(2); // Jean Grey
+                    pap2025.logica.Material material6 = materiales.get(2); // Captain America: The Winter Soldier
+                    pap2025.logica.Lector lector6 = lectores.get(2); // Steve Rogers (Captain America)
                     Integer prestamo6Id = controladorFachada.crearPrestamo(material6, lector6, bibliotecarios.get(1), fechaDevolucion);
                     if (prestamo6Id != null) {
                         controladorFachada.actualizarEstadoPrestamo(prestamo6Id, pap2025.logica.EstadoP.DEVUELTO);
@@ -588,24 +665,31 @@ public class VentanaPrincipal extends JFrame {
             
             // Mostrar resumen
             JOptionPane.showMessageDialog(this, 
-                "✅ Datos de prueba X-Men creados exitosamente!\n\n" +
-                "📚 Se crearon 3 libros temáticos:\n" +
-                "   • X-Men: Days of Future Past\n" +
-                "   • The Phoenix Saga\n" +
-                "   • Wolverine: Origin\n\n" +
-                "🎨 Se crearon 2 artículos especiales:\n" +
-                "   • Cerebro de Xavier (Réplica)\n" +
-                "   • Gafas de Cyclops (Réplica)\n\n" +
-                "👤 Se crearon 3 lectores X-Men:\n" +
-                "   • Charles Xavier\n" +
-                "   • Logan (Wolverine)\n" +
-                "   • Jean Grey\n\n" +
-                "🏢 Se crearon 2 bibliotecarios X-Men:\n" +
-                "   • Ororo Munroe (Storm)\n" +
-                "   • Scott Summers (Cyclops)\n\n" +
+                "✅ Datos de prueba Marvel creados exitosamente!\n\n" +
+                "📚 Se crearon 5 libros temáticos:\n" +
+                "   • The Amazing Spider-Man: The Complete Collection\n" +
+                "   • Iron Man: Armor Wars\n" +
+                "   • Captain America: The Winter Soldier\n" +
+                "   • Thor: God of Thunder\n" +
+                "   • Black Widow: Red Room Files\n\n" +
+                "🎨 Se crearon 4 artículos especiales:\n" +
+                "   • Máscara de Spider-Man (Réplica)\n" +
+                "   • Reactor Arc de Iron Man (Réplica)\n" +
+                "   • Escudo de Captain America (Réplica)\n" +
+                "   • Martillo de Thor Mjolnir (Réplica)\n\n" +
+                "👤 Se crearon 5 lectores Marvel:\n" +
+                "   • Peter Parker (Spider-Man)\n" +
+                "   • Tony Stark (Iron Man)\n" +
+                "   • Steve Rogers (Captain America)\n" +
+                "   • Natasha Romanoff (Black Widow)\n" +
+                "   • Thor Odinson\n\n" +
+                "🏢 Se crearon 3 bibliotecarios Marvel:\n" +
+                "   • Nick Fury\n" +
+                "   • Pepper Potts\n" +
+                "   • Maria Hill\n\n" +
                 "📋 Se crearon 6 préstamos con diferentes estados\n\n" +
                 "💡 Los datos están listos para usar en las diferentes funcionalidades del sistema.",
-                "Datos X-Men Creados", 
+                "Datos Marvel Creados", 
                 JOptionPane.INFORMATION_MESSAGE);
             
         } catch (Exception e) {

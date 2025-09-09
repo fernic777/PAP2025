@@ -805,6 +805,19 @@ public class ControladorFachada implements IControladorFachada {
             return null;
         }
         
+        // Verificar que la fecha de devolución no sea menor al día de hoy
+        DTFecha fechaHoy = new DTFecha(java.time.LocalDate.now().getDayOfMonth(), 
+                                      java.time.LocalDate.now().getMonthValue(), 
+                                      java.time.LocalDate.now().getYear());
+        
+        if (esFechaAnterior(fechaDevolucion, fechaHoy)) {
+            System.out.println("❌ Error: La fecha de devolución no puede ser anterior al día de hoy");
+            System.out.println("   📅 Fecha de devolución ingresada: " + formatearFecha(fechaDevolucion));
+            System.out.println("   📅 Fecha actual: " + formatearFecha(fechaHoy));
+            System.out.println("   ⚠️  La fecha de devolución debe ser igual o posterior al día de hoy");
+            return null;
+        }
+        
         // Verificar que el material esté disponible
         if (!estaMaterialDisponible(material)) {
             System.out.println("❌ Error: El material no está disponible para préstamo");
@@ -1152,4 +1165,31 @@ public class ControladorFachada implements IControladorFachada {
         System.out.println("📊 Materiales con préstamos pendientes identificados: " + materialesPendientes.size() + " materiales");
         return materialesPendientes;
     }
+    
+    // ===== MÉTODOS AUXILIARES PARA VALIDACIÓN DE FECHAS =====
+    
+    /**
+     * Verifica si una fecha es anterior a otra
+     * @param fecha1 Primera fecha
+     * @param fecha2 Segunda fecha
+     * @return true si fecha1 es anterior a fecha2, false en caso contrario
+     */
+    private boolean esFechaAnterior(DTFecha fecha1, DTFecha fecha2) {
+        if (fecha1.getAnio() < fecha2.getAnio()) {
+            return true;
+        } else if (fecha1.getAnio() > fecha2.getAnio()) {
+            return false;
+        } else {
+            // Mismo año, comparar mes
+            if (fecha1.getMes() < fecha2.getMes()) {
+                return true;
+            } else if (fecha1.getMes() > fecha2.getMes()) {
+                return false;
+            } else {
+                // Mismo año y mes, comparar día
+                return fecha1.getDia() < fecha2.getDia();
+            }
+        }
+    }
+    
 }

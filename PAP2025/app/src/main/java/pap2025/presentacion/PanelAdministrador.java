@@ -311,24 +311,40 @@ public class PanelAdministrador extends JInternalFrame {
             return;
         }
         
+        // Cargar listas completas para evitar LazyInitializationException
+        List<Lector> lectores = controladorFachada.getListaLectores();
+        List<Material> materiales = controladorFachada.getListaMateriales();
+        
         // Llenar tabla con datos
         for (Prestamo prestamo : historial) {
             Object[] fila = new Object[6];
             fila[0] = prestamo.getId();
             
             // Material prestado con información real
-            if (prestamo.getMaterial() instanceof Libro) {
-                Libro libro = (Libro) prestamo.getMaterial();
-                fila[1] = "Libro: " + libro.getTitulo() + " (ID: " + libro.getId() + ")";
-            } else if (prestamo.getMaterial() instanceof ArtEspeciales) {
-                ArtEspeciales artEspecial = (ArtEspeciales) prestamo.getMaterial();
-                fila[1] = "Artículo: " + artEspecial.getDescripcion() + " (ID: " + artEspecial.getId() + ")";
-            } else {
-                fila[1] = "Material ID: " + prestamo.getMaterial().getId();
+            String materialInfo = "Material ID: " + prestamo.getMaterial().getId();
+            for (Material material : materiales) {
+                if (material.getId() == prestamo.getMaterial().getId()) {
+                    if (material instanceof Libro) {
+                        Libro libro = (Libro) material;
+                        materialInfo = "Libro: " + libro.getTitulo();
+                    } else if (material instanceof ArtEspeciales) {
+                        ArtEspeciales artEspecial = (ArtEspeciales) material;
+                        materialInfo = "Artículo: " + artEspecial.getDescripcion();
+                    }
+                    break;
+                }
             }
+            fila[1] = materialInfo;
             
-            // Lector con información básica (evitar LazyInitializationException)
-            fila[2] = "Lector ID: " + prestamo.getLector().getId();
+            // Lector con nombre real
+            String lectorInfo = "Lector ID: " + prestamo.getLector().getId();
+            for (Lector lector : lectores) {
+                if (lector.getId() == prestamo.getLector().getId()) {
+                    lectorInfo = lector.getNombre() + " (" + lector.getEmail() + ")";
+                    break;
+                }
+            }
+            fila[2] = lectorInfo;
             // Fecha real de solicitud del préstamo
             fila[3] = formatearFecha(prestamo.getFechaSolicitada());
             
